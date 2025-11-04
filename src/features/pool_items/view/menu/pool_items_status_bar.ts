@@ -49,11 +49,11 @@ export function notifyNewPoolItemsFound(newPoolItemsCount: number): void {
 }
 
 async function setExpectedTotalPoolItemsCount(): Promise<void> {
-  expectedTotalPoolItemsCount = await API.getPoolItemsCount(getPoolItemsPageId() ?? "");
+    expectedTotalPoolItemsCount = await API.getPoolItemsCount();
 }
 
 export function setupPoolItemsStatus(): void {
   setExpectedTotalPoolItemsCount();
   matchCountIndicator = FAVORITES_SEARCH_GALLERY_CONTAINER.querySelector("#match-count-label") ?? document.createElement("label");
-  statusIndicator = FAVORITES_SEARCH_GALLERY_CONTAINER.querySelector("#poolItems-load-status-label") ?? document.createElement("label");
+  statusIndicator = FAVORITES_SEARCH_GALLERY_CONTAINER.querySelector("#favorites-load-status-label") ?? document.createElement("label");
 }

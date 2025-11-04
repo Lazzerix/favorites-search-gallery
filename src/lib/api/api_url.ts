@@ -20,6 +20,7 @@ const POST_PAGE_URL = `${ORIGIN}/index.php?page=post&s=view&id=`;
 const SEARCH_PAGE_URL = `${ORIGIN}/index.php?page=post&s=list&tags=`;
 const FAVORITES_PAGE_URL = `${ORIGIN}/index.php?page=favorites&s=view&id=${getFavoritesPageId()}`;
 const POOL_PAGE_URL = `${ORIGIN}/index.php?page=pool&s=show&id=${getPoolItemsPageId()}`;
+const POOL_PAGE_ORDER_URL = `${ORIGIN}/index.php?page=pool&s=order&id=${getPoolItemsPageId()}`;
 const PROFILE_PAGE_URL = `${ORIGIN}/index.php?page=account&s=profile&id=`;
 
 const POST_VOTE_URL = `${ORIGIN}/index.php?page=post&s=vote&type=up&id=`;
@@ -47,6 +48,10 @@ export function createPoolPageURL(pageNumber: number): string {
 
 export function createProfilePageURL(id: string): string {
   return `${PROFILE_PAGE_URL}${id}`;
+}
+
+export function createPoolOrderPageURL(): string {
+    return `${POOL_PAGE_ORDER_URL}`;
 }
 
 export function createPostAPIURL(id: string): string {

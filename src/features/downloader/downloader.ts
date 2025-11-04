@@ -1,10 +1,12 @@
-import { DownloadRequest, createDownloadRequest } from "./download_request";
+import {DownloadRequest, createDownloadRequest, createDownloadRequestPool} from "./download_request";
 import { ConcurrencyLimiter } from "../../lib/components/concurrency_limiter";
 import { DownloadAbortedError } from "../../types/error_types";
 import { Favorite } from "../../types/favorite_types";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { downloadBlob } from "../../lib/download/downloader";
 
 const FETCH_LIMITER = new ConcurrencyLimiter(3);
+let downloadIndexMod = 0;
 
 interface ZipWriter {
   add: (name: string, reader: unknown, options: { compression: string }) => Promise<void>;
@@ -39,33 +41,34 @@ async function loadZipJS(): Promise<void> {
   });
 }
 
-export async function startDownloading(favorites: Favorite[], progressCallback: (request: DownloadRequest) => void): Promise<void> {
+export async function startDownloading(favorites: Favorite[], progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<void> {
   if (currentlyDownloading) {
     return;
   }
   currentlyDownloading = true;
   aborted = false;
-  await downloadFavorites(favorites, progressCallback);
+  await downloadFavorites(favorites, progressCallback, downloadIndex);
 }
 
-async function downloadFavorites(favorites: Favorite[], progressCallback: (request: DownloadRequest) => void): Promise<void> {
-  downloadBlob(await createTotalFavoriteBlob(favorites, progressCallback), "download.zip");
+async function downloadFavorites(favorites: Favorite[], progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<void> {
+  downloadBlob(await createTotalFavoriteBlob(favorites, progressCallback, downloadIndex), "download.zip");
   currentlyDownloading = false;
 }
 
- async function createTotalFavoriteBlob(favorites: Favorite[], progressCallback: (request: DownloadRequest) => void): Promise<Blob> {
+ async function createTotalFavoriteBlob(favorites: Favorite[], progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<Blob> {
   const blobWriter = new zip.BlobWriter("application/zip");
   const zipWriter = new zip.ZipWriter(blobWriter);
 
-  await Promise.all(favorites.map(favorite => createFavoriteBlob(favorite, zipWriter, progressCallback)));
+  downloadIndexMod = downloadIndex;
+  await Promise.all(favorites.map(favorite => createFavoriteBlob(favorite, zipWriter, progressCallback, downloadIndex)));
   stopIfAborted();
   return zipWriter.close();
 }
 
-async function createFavoriteBlob(favorite: Favorite, zipWriter: ZipWriter, progressCallback: (request: DownloadRequest) => void): Promise<void> {
+async function createFavoriteBlob(favorite: Favorite, zipWriter: ZipWriter, progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<void> {
   try {
     stopIfAborted();
-    const request = await createDownloadRequest(favorite);
+    const request = await createDownloadRequest(favorite, downloadIndex - (downloadIndexMod -= 1));
 
     stopIfAborted();
     const response = await FETCH_LIMITER.run(() => {
@@ -86,10 +89,58 @@ async function createFavoriteBlob(favorite: Favorite, zipWriter: ZipWriter, prog
   }
 }
 
+export async function startDownloadingPool(favorites: PoolItemRaw[], progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<void> {
+    if (currentlyDownloading) {
+        return;
+    }
+    currentlyDownloading = true;
+    aborted = false;
+    await downloadPoolItems(favorites, progressCallback, downloadIndex);
+}
+
+async function downloadPoolItems(favorites: PoolItemRaw[], progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<void> {
+    downloadBlob(await createTotalPoolBlob(favorites, progressCallback, downloadIndex), "download.zip");
+    currentlyDownloading = false;
+}
+
+async function createTotalPoolBlob(favorites: PoolItemRaw[], progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<Blob> {
+    const blobWriter = new zip.BlobWriter("application/zip");
+    const zipWriter = new zip.ZipWriter(blobWriter);
+
+    downloadIndexMod = downloadIndex;
+    await Promise.all(favorites.map(favorite => createPoolItemBlob(favorite, zipWriter, progressCallback, downloadIndex)));
+    stopIfAborted();
+    return zipWriter.close();
+}
+
+async function createPoolItemBlob(favorite: PoolItemRaw, zipWriter: ZipWriter, progressCallback: (request: DownloadRequest) => void, downloadIndex: number): Promise<void> {
+    try {
+        stopIfAborted();
+        const request = await createDownloadRequestPool(favorite, downloadIndex - (downloadIndexMod -= 1));
+
+        stopIfAborted();
+        const response = await FETCH_LIMITER.run(() => {
+            return fetch(request.url);
+        });
+
+        stopIfAborted();
+        const blob = await response.blob();
+
+        stopIfAborted();
+        await zipFile(zipWriter, request, blob);
+        stopIfAborted();
+        progressCallback?.(request);
+        stopIfAborted();
+    } catch (error) {
+        stopIfAborted();
+        console.error(error);
+    }
+}
+
 async function zipFile(zipWriter: ZipWriter, request: DownloadRequest, blob: Blob): Promise<void> {
   const reader = new zip.BlobReader(blob);
 
-  await zipWriter.add(request.filename, reader, {
+  await zipWriter.add(`${request.downloadIndex} - ${request.filename}`, reader, {
     compression: "STORE"
   });
 }

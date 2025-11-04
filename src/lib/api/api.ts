@@ -4,7 +4,7 @@ import { AddFavoriteStatus } from "../../types/favorite_types";
 import { ConcurrencyLimiter } from "../components/concurrency_limiter";
 import { FavoritesSettings } from "../../config/favorites_settings";
 import { Post } from "../../types/common_types";
-import { extractFavoritesCount } from "./profile_page_parser";
+import {extractFavoritesCount, extractPoolSize} from "./profile_page_parser";
 import { extractFavoritesPageCount } from "./favorites_page_parser";
 import { parsePostFromPostPage as extractPostFromPostPage } from "./post_page_parser";
 import { getUserId } from "../../utils/misc/favorites_page_metadata";
@@ -123,8 +123,8 @@ export function getFavoritesCount(id: string): Promise<number | null> {
   return getHTML(FSG_URL.createProfilePageURL(id)).then(extractFavoritesCount).catch(null);
 }
 
-export function getPoolItemsCount(id: string): Promise<number | null> {
-    return getHTML(FSG_URL.createProfilePageURL(id)).then(extractFavoritesCount).catch(null);
+export function getPoolItemsCount(): Promise<number | null> {
+    return getHTML(FSG_URL.createPoolOrderPageURL()).then(extractPoolSize).catch(null);
 }
 
 export function getFavoritesPageCount(): Promise<number | null> {

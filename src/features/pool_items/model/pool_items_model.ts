@@ -1,16 +1,16 @@
+import * as InfiniteScrollFeeder from "./presentation/pool_items_infinite_scroll_feeder";
 import * as PoolItemsLoader from "./load/pool_items_loader";
 import * as PoolItemsMetadata from "../types/metadata/pool_items_metadata";
 import * as PoolItemsPaginator from "./presentation/pool_items_paginator";
 import * as PoolItemsSearchFilter from "./search/components/pool_items_search_filter";
 import * as PoolItemsSorter from "./search/components/pool_items_sorter";
-import * as InfiniteScrollFeeder from "./presentation/pool_items_infinite_scroll_feeder";
-import { PoolItem, getFavorite } from "../types/pool_item/pool_item";
-import { PoolItemsPageRelation, NewPoolItems } from "../types/pool_item/pool_items_types";
 import { NavigationKey, Rating, SortingMethod } from "../../../types/common_types";
+import { NewPoolItems, PoolItemsPageRelation } from "../types/pool_item/pool_items_types";
+import { PoolItem, getFavorite } from "../types/pool_item/pool_item";
 import { CONTENT_CONTAINER } from "../../../lib/global/content/content_container";
+import { ITEM_SELECTOR } from "../../../utils/dom/dom";
 import { POOL_ITEMS_SEARCH_INDEX } from "./search/index/pool_items_search_index";
 import { PoolItemsPaginationParameters } from "../types/pool_items_pagination_parameters";
-import { ITEM_SELECTOR } from "../../../utils/dom/dom";
 import { shuffleArray } from "../../../utils/collection/array";
 
 let latestSearchResults: PoolItem[] = [];
@@ -21,10 +21,13 @@ export async function loadAllPoolItemsFromDatabase(): Promise<PoolItem[]> {
 }
 
 export function fetchAllPoolItems(onSearchResultsFound: () => void): Promise<void> {
-  const onPoolItemsFound = (poolItems: PoolItem[]): void => {
-    latestSearchResults = latestSearchResults.concat(PoolItemsSearchFilter.filter(poolItems));
+    console.log("PoolItemsModel.fetchAllPoolItems Start");
+  const onPoolItemsFound = (poolItem: PoolItem[]): void => {
+    latestSearchResults = latestSearchResults.concat(PoolItemsSearchFilter.filter(poolItem));
     return onSearchResultsFound();
   };
+
+    console.log("PoolItemsModel.fetchAllPoolItems End");
   return PoolItemsLoader.fetchAllPoolItems(onPoolItemsFound);
 }
 
@@ -173,7 +176,9 @@ export function deleteDatabase(): void {
 }
 
 export function keepIndexedTagsSorted(): void {
+    console.log("keepIndexedTagsSorted Start");
   POOL_ITEMS_SEARCH_INDEX.keepIndexedTagsSorted(true);
+    console.log("keepIndexedTagsSorted End");
 }
 
 export function buildSearchIndexAsynchronously(): void {

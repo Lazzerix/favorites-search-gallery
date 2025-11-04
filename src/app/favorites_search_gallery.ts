@@ -12,6 +12,7 @@ import { setupTagModifier } from "../features/tag_modifier/tag_modifier";
 import { setupTooltip } from "../features/tooltip/tooltip";
 
 function runFavoritesSearchGallery(): void {
+    console.log("runFavoritesSearchGallery");
   setupGlobals();
   setupFavorites();
   setupPoolItems();

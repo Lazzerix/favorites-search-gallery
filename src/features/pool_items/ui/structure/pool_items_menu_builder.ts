@@ -20,7 +20,7 @@ export function buildPoolItemsMenu(): void {
 }
 
 function insertPoolItemsMenuHTML(): void {
-  insertStyleHTML(ON_MOBILE_DEVICE ? MOBILE_HTML : DESKTOP_HTML, "poolItems-menu-style");
+  insertStyleHTML(ON_MOBILE_DEVICE ? MOBILE_HTML : DESKTOP_HTML, "favorites-menu-style");
   insertHTMLAndExtractStyle(FAVORITES_SEARCH_GALLERY_CONTAINER, "afterbegin", FAVORITES_HTML);
 }
 

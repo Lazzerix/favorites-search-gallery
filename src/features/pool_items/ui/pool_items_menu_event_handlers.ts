@@ -16,8 +16,8 @@ export function toggleOptionHotkeyHints(value: boolean): void {
 }
 
 export function toggleUI(value: boolean): void {
-  const menu = document.getElementById("poolItems-search-gallery-menu");
-  const panels = document.getElementById("poolItems-search-gallery-menu-panels");
+  const menu = document.getElementById("favorites-search-gallery-menu");
+  const panels = document.getElementById("favorites-search-gallery-menu-panels");
   const header = document.getElementById("header");
   const container = document.getElementById("show-ui-container");
   const bottomPanel3 = document.getElementById("bottom-panel-3");
@@ -47,7 +47,7 @@ export function toggleUI(value: boolean): void {
 
 export function togglePoolItemsOptions(value: boolean): void {
   if (ON_MOBILE_DEVICE) {
-    document.getElementById("left-poolItems-panel-bottom-row")?.classList.toggle("hidden", !value);
+    document.getElementById("left-favorites-panel-bottom-row")?.classList.toggle("hidden", !value);
     insertStyleHTML(`
             #mobile-button-row {
               display: ${value ? "block" : "none"};

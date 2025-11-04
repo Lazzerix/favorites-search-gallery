@@ -21,11 +21,11 @@ export async function fetchSampleImageBitmapFromThumb(thumb: HTMLElement, abortC
   });
 }
 
-export async function getOriginalImageURL(item: HTMLElement | Favorite): Promise<string> {
+export async function getOriginalImageURL(item: HTMLElement | Favorite | PoolItemRaw): Promise<string> {
   return (await getOriginalContentURL(item)).replace(".mp4", ".jpg");
 }
 
-export async function getOriginalContentURL(item: HTMLElement | Favorite): Promise<string> {
+export async function getOriginalContentURL(item: HTMLElement | Favorite | PoolItemRaw): Promise<string> {
   return getOriginalImageURLWithJPGExtension(item).replace(".jpg", `.${await getExtension(item)}`);
 }
 

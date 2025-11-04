@@ -6,18 +6,30 @@ import { Events } from "../../../../../lib/global/events/events";
 import { PoolItem } from "../../../types/pool_item/pool_item";
 
 export async function loadAllPoolItems(): Promise<void> {
-  await loadAllPoolItemsFromDatabase();
+    console.log(`1 ${PoolItemsModel.getAllPoolItems().length}`);
+    await loadAllPoolItemsFromDatabase();
+    console.log(`2 ${PoolItemsModel.getAllPoolItems().length}`);
 
-  if (hasPoolItems()) {
-    Events.poolItems.poolItemsLoadedFromDatabase.emit();
-    showLoadedPoolItems();
-    await loadNewPoolItems();
-  } else {
-    await fetchAllPoolItems();
-    Events.poolItems.startedStoringAllPoolItems.emit();
-    await saveAllPoolItems();
-  }
-  Events.poolItems.poolItemsLoaded.emit();
+    if (hasPoolItems()) {
+        console.log(`2.0 ${PoolItemsModel.getAllPoolItems().length}`);
+        Events.poolItems.poolItemsLoadedFromDatabase.emit();
+        console.log(`2.1 ${PoolItemsModel.getAllPoolItems().length}`);
+        showLoadedPoolItems();
+        console.log(`2.2 ${PoolItemsModel.getAllPoolItems().length}`);
+        await loadNewPoolItems();
+        console.log(`2.3 ${PoolItemsModel.getAllPoolItems().length}`);
+    } else {
+        console.log(`2.0B ${PoolItemsModel.getAllPoolItems().length}`);
+        await fetchAllPoolItems();
+        console.log(`2.1B ${PoolItemsModel.getAllPoolItems().length}`);
+        Events.poolItems.startedStoringAllPoolItems.emit();
+        console.log(`2.2B ${PoolItemsModel.getAllPoolItems().length}`);
+        await saveAllPoolItems();
+        console.log(`2.3B ${PoolItemsModel.getAllPoolItems().length}`);
+    }
+    console.log(`3 ${PoolItemsModel.getAllPoolItems().length}`);
+    Events.poolItems.poolItemsLoaded.emit();
+    console.log(`4 ${PoolItemsModel.getAllPoolItems().length}`);
 }
 
 async function loadAllPoolItemsFromDatabase(): Promise<void> {
@@ -30,9 +42,13 @@ function hasPoolItems(): boolean {
 }
 
 async function fetchAllPoolItems(): Promise<void> {
+    console.log(`fetchAllPoolItems Start ${PoolItemsModel.getAllPoolItems().length}`);
   PoolItemsPresentationFlow.clear();
+    console.log(`fetchAllPoolItems Mid1 ${PoolItemsModel.getAllPoolItems().length}`);
   Events.poolItems.startedFetchingPoolItems.emit();
+    console.log(`fetchAllPoolItems Mid2 ${PoolItemsModel.getAllPoolItems().length}`);
   await PoolItemsModel.fetchAllPoolItems(processFetchedPoolItems);
+    console.log(`fetchAllPoolItems End ${PoolItemsModel.getAllPoolItems().length}`);
 }
 
 async function saveAllPoolItems(): Promise<void> {
@@ -47,9 +63,13 @@ function showLoadedPoolItems(): void {
 }
 
 function processFetchedPoolItems(): void {
+    console.log(`processFetchedPoolItems Start ${PoolItemsModel.getAllPoolItems().length}`);
   PoolItemsView.updateStatusWhileFetching(PoolItemsModel.getLatestSearchResults().length, PoolItemsModel.getAllPoolItems().length);
+    console.log(`processFetchedPoolItems Mid1 ${PoolItemsModel.getAllPoolItems().length}`);
   Events.poolItems.searchResultsUpdated.emit(PoolItemsModel.getLatestSearchResults());
+    console.log(`processFetchedPoolItems Mid2 ${PoolItemsModel.getAllPoolItems().length}`);
   PoolItemsPresentationFlow.handleNewSearchResults();
+    console.log(`processFetchedPoolItems Start ${PoolItemsModel.getAllPoolItems().length}`);
 }
 
 async function loadNewPoolItems(): Promise<void> {

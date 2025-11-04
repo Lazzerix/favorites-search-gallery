@@ -11,6 +11,7 @@ import { ON_FAVORITES_PAGE } from "./flags/intrinsic_flags";
 import { PromiseTimeoutError } from "../../types/error_types";
 import { getOriginalImageURLWithJPGExtension } from "../api/api_content";
 import { withTimeout } from "../../utils/misc/async";
+import {PoolItemRaw} from "../../types/pool_item_types";
 
 const DATABASE_NAME: string = "ImageExtensions";
 const OBJECT_STORE_NAME: string = "extensionMappings";
@@ -79,7 +80,7 @@ export function set(id: string, extension: MediaExtension): void {
   }
 }
 
-export function getExtension(item: HTMLElement | Favorite): Promise<MediaExtension> {
+export function getExtension(item: HTMLElement | Favorite | PoolItemRaw): Promise<MediaExtension> {
   if (isVideo(item)) {
     return Promise.resolve("mp4");
   }
@@ -96,13 +97,13 @@ export function getExtension(item: HTMLElement | Favorite): Promise<MediaExtensi
     });
 }
 
-function tryAllPossibleExtensions(item: HTMLElement | Favorite): Promise<MediaExtension> {
+function tryAllPossibleExtensions(item: HTMLElement | Favorite | PoolItemRaw): Promise<MediaExtension> {
   return BRUTE_FORCE_LIMITER.run(() => {
     return tryAllPossibleExtensionsHelper(item);
   });
 }
 
-async function tryAllPossibleExtensionsHelper(item: HTMLElement | Favorite): Promise<MediaExtension> {
+async function tryAllPossibleExtensionsHelper(item: HTMLElement | Favorite | PoolItemRaw): Promise<MediaExtension> {
   const baseURL = getOriginalImageURLWithJPGExtension(item);
 
   for (const extension of EXTENSIONS) {

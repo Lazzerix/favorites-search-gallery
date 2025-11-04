@@ -45,7 +45,9 @@ export class InvertedSearchIndex<T extends Searchable> {
   }
 
   public keepIndexedTagsSorted(value: boolean): void {
-    this.sortTagsOnAdd = value;
+      console.log("POOL_ITEMS_SEARCH_INDEX.keepIndexedTagsSorted Start");
+      this.sortTagsOnAdd = value;
+      console.log("POOL_ITEMS_SEARCH_INDEX.keepIndexedTagsSorted End");
   }
 
   protected sortTags(): void {

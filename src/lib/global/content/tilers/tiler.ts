@@ -19,7 +19,7 @@ const TILERS = [
   new NativeTiler()
 ];
 
-let currentLayout: Layout = ON_FAVORITES_PAGE ? Preferences.favoritesLayout.value : Preferences.searchPageLayout.value;
+let currentLayout: Layout = ON_FAVORITES_PAGE ? Preferences.favoritesLayout.value : (ON_SEARCH_PAGE ? Preferences.searchPageLayout.value : Preferences.poolItemsLayout.value);
 
 export function getCurrentTiler(): Tiler {
   return TILERS.find(tiler => tiler.className === currentLayout) ?? TILERS[0];

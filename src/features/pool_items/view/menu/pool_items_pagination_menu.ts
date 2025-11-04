@@ -16,13 +16,13 @@ RANGE_INDICATOR.id = "pagination-range-label";
 function createContainer(): HTMLSpanElement {
   const menu = document.createElement("span");
 
-  menu.id = "poolItems-pagination-container";
+  menu.id = "favorites-pagination-container";
   return menu;
 }
 
 function insertMenu(): void {
   if (ON_DESKTOP_DEVICE) {
-    const placeToInsert = document.getElementById("poolItems-pagination-placeholder");
+    const placeToInsert = document.getElementById("favorites-pagination-placeholder");
 
     if (placeToInsert !== null) {
       placeToInsert.insertAdjacentElement("afterend", CONTAINER);
@@ -80,7 +80,7 @@ function createNumberTraversalButton(currentPageNumber: number, pageNumber: numb
   const button = document.createElement("button");
   const selected = currentPageNumber === pageNumber;
 
-  button.id = `poolItems-page-${pageNumber}`;
+  button.id = `favorites-page-${pageNumber}`;
   button.title = `Goto page ${pageNumber}`;
   button.className = "pagination-number";
   button.classList.toggle("selected", selected);
@@ -156,11 +156,11 @@ function updateArrowTraversalButtonInteractability(previousPage: HTMLButtonEleme
 
 export function toggle(value: boolean): void {
   const html = `
-      #poolItems-pagination-container,
+      #favorites-pagination-container,
       #results-per-page-container,
       #favorite-finder,
       #pagination-range-label,
-      #poolItems-bottom-navigation-buttons
+      #favorites-bottom-navigation-buttons
       {
         display: none !important;
       }

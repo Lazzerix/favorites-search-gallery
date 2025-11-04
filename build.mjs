@@ -10,7 +10,7 @@ import { webWorker } from "./WEB_worker_plugin.mjs";
   const OUT_FILE = "dist/favorites_search_gallery.user.js";
   const META_FILE = "dist/meta.json";
   const BANNER = `// ==UserScript==
-// @name         Rule34 Favorites Search Gallery
+// @name         Rule34 Favorites Search Gallery InDev
 // @namespace    bruh3396
 // @version      1.20.3
 // @description  Search, View, and Play Rule34 Favorites (Desktop/Android/iOS)

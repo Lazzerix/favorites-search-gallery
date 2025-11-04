@@ -14,7 +14,7 @@ export function insertPoolItemsFinder(): void {
   if (ON_MOBILE_DEVICE || !PoolItemsSettings.poolItemFinderEnabled) {
     return;
   }
-  const foundParent = document.querySelector("#left-poolItems-panel-top-row");
+  const foundParent = document.querySelector("#left-favorites-panel-top-row");
 
   if (!(foundParent instanceof HTMLElement)) {
     return;

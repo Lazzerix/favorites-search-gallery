@@ -15,7 +15,7 @@ import { prepareDynamicElements } from "../../../../../lib/ui/element_utils";
 const BUTTONS: Partial<ButtonElement>[] = [
   {
     id: "download-button",
-    parentId: "additional-pool_item-options",
+    parentId: "additional-favorites-options",
     textContent: "Download",
     title: "Download search results",
     event: Events.poolItems.downloadButtonClicked,
@@ -26,7 +26,7 @@ const BUTTONS: Partial<ButtonElement>[] = [
 const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   {
     id: "infinite-scroll",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Infinite Scroll",
     title: "Use infinite scroll (waterfall) instead of pages",
     preference: Preferences.infiniteScrollEnabled,
@@ -34,10 +34,10 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
     event: Events.poolItems.infiniteScrollToggled
   },
   {
-    id: "show-remove-pool_item-buttons",
-    parentId: "pool_item-options-left",
+    id: "show-remove-favorites-buttons",
+    parentId: "favorites-options-left",
     textContent: "Remove Buttons",
-    title: "Toggle remove pool_item buttons",
+    title: "Toggle remove favorites buttons",
     enabled: USER_IS_ON_THEIR_OWN_POOL_PAGE,
     preference: Preferences.removeButtonsVisible,
     hotkey: "R",
@@ -45,10 +45,10 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
     event: Events.poolItems.removeButtonsToggled
   },
   {
-    id: "show-add-pool_item-buttons",
-    parentId: "pool_item-options-left",
+    id: "show-add-favorites-buttons",
+    parentId: "favorites-options-left",
     textContent: "Add Favorite Buttons",
-    title: "Toggle add pool_item buttons",
+    title: "Toggle add favorites buttons",
     enabled: !USER_IS_ON_THEIR_OWN_POOL_PAGE,
     preference: Preferences.addButtonsVisible,
     function: toggleAddOrRemoveButtons,
@@ -57,7 +57,7 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   },
   {
     id: "show-download-buttons",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Download Buttons",
     title: "Toggle download buttons",
     enabled: true,
@@ -68,7 +68,7 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   },
   {
     id: "exclude-blacklist",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Exclude Blacklist",
     title: "Exclude poolItems with blacklisted tags from search",
     enabled: USER_IS_ON_THEIR_OWN_POOL_PAGE,
@@ -78,7 +78,7 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   },
   {
     id: "enable-autoplay",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Autoplay",
     title: "Enable autoplay in gallery",
     enabled: GALLERY_ENABLED,
@@ -88,7 +88,7 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   },
   {
     id: "toggle-header",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Header",
     title: "Toggle site header",
     preference: Preferences.headerEnabled,
@@ -100,7 +100,7 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   },
   {
     id: "dark-theme",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Dark Theme",
     title: "Toggle dark theme",
     defaultValue: usingDarkTheme(),
@@ -110,7 +110,7 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   },
   {
     id: "enhance-search-pages",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Search Page Gallery",
     title: "Enable gallery and other features on search pages",
     preference: Preferences.searchPagesEnabled,
@@ -127,7 +127,7 @@ const TOGGLE_SWITCHES: Partial<CheckboxElement>[] = [
   },
   {
     id: "mobile-gallery",
-    parentId: "pool_item-options-left",
+    parentId: "favorites-options-left",
     textContent: "Gallery",
     title: "Enable gallery",
     position: "beforeend",

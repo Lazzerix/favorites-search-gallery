@@ -6,7 +6,7 @@ import { getCurrentThemeClass } from "../../../../../utils/dom/style";
 let dialog: HTMLDialogElement;
 
 function insertHelpHTML(): void {
-  const parent = document.getElementById(ON_MOBILE_DEVICE ? "mobile-footer-header" : "left-poolItems-panel-top-row");
+  const parent = document.getElementById(ON_MOBILE_DEVICE ? "mobile-footer-header" : "left-favorites-panel-top-row");
 
   if (parent !== null) {
     parent.insertAdjacentHTML("beforeend", HELP_HTML);

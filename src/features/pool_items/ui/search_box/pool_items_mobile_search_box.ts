@@ -59,11 +59,11 @@ export function createMobileSearchBar(id: string, parentId: string, onClick: () 
     }
   });
   const stickyMenuHTML = `
-     #poolItems-search-gallery-content {
+     #favorites-search-gallery-content {
         margin-top: 65px;
         margin-bottom: 65px;
       }
-      #poolItems-search-gallery-menu {
+      #favorites-search-gallery-menu {
           position: fixed;
           margin-top: 0;
       }`;
@@ -71,7 +71,7 @@ export function createMobileSearchBar(id: string, parentId: string, onClick: () 
   const onHeaderVisibilityChange = async(headerVisible: boolean): Promise<void> => {
     headerIsVisible = headerVisible;
     insertStyleHTML(headerVisible ? "" : stickyMenuHTML, "sticky-menu");
-    const optionsMenu = document.getElementById("left-poolItems-panel-bottom-row");
+    const optionsMenu = document.getElementById("left-favorites-panel-bottom-row");
 
     CONTENT_CONTAINER.classList.remove("sticky-menu");
     CONTENT_CONTAINER.classList.remove("sticky-menu-shadow");
@@ -161,7 +161,7 @@ function createMobileSymbolRow(searchBox: HTMLInputElement): void {
   if (ON_DESKTOP_DEVICE) {
     return;
   }
-  const placeToInsert = document.getElementById("left-poolItems-panel");
+  const placeToInsert = document.getElementById("left-favorites-panel");
 
   if (placeToInsert === null) {
     return;
@@ -183,7 +183,7 @@ function createMobileSymbolRow(searchBox: HTMLInputElement): void {
     button.addEventListener("blur", async() => {
       await sleep(0);
 
-      if ((document.activeElement === null) || (document.activeElement.id !== "poolItems-search-box" && !symbolContainer.contains(document.activeElement))) {
+      if ((document.activeElement === null) || (document.activeElement.id !== "favorites-search-box" && !symbolContainer.contains(document.activeElement))) {
         symbolContainer.classList.toggle("active", false);
       }
     });
@@ -210,7 +210,7 @@ function createMobileSymbolRow(searchBox: HTMLInputElement): void {
   searchBox.addEventListener("blur", async() => {
     await sleep(10);
 
-    if (document.activeElement === null || (document.activeElement.id !== "poolItems-search-box" && !symbolContainer.contains(document.activeElement))) {
+    if (document.activeElement === null || (document.activeElement.id !== "favorites-search-box" && !symbolContainer.contains(document.activeElement))) {
       symbolContainer.classList.toggle("active", false);
     }
   });

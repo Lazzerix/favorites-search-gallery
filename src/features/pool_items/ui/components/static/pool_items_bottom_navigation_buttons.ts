@@ -13,9 +13,9 @@ export async function setupPoolItemsBottomNavigationButtons(): Promise<void> {
   const previousButton = document.createElement("button");
   const nextButton = document.createElement("button");
 
-  container.id = "poolItems-bottom-navigation-buttons";
-  previousButton.id = "poolItems-bottom-previous-button";
-  nextButton.id = "poolItems-bottom-next-button";
+  container.id = "favorites-bottom-navigation-buttons";
+  previousButton.id = "favorites-bottom-previous-button";
+  nextButton.id = "favorites-bottom-next-button";
 
   previousButton.disabled = true;
   nextButton.disabled = true;
@@ -52,7 +52,7 @@ export async function setupPoolItemsBottomNavigationButtons(): Promise<void> {
       flex-direction: column;
     }
 
-    #poolItems-search-gallery {
+    #favorites-search-gallery {
       height: 100%;
       display: flex;
       flex-direction: column;

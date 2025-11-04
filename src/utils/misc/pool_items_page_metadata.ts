@@ -8,9 +8,12 @@ export function getPoolItemsPageId(): string | null {
   const match = (/(?:&|\?)id=(\d+)/).exec(window.location.href);
   return match ? match[1] : null;
 }
-
+/**
+ * todo: check to see if the edit page of a pool load. If so check pool type, if not it is private
+ * temporarily overwritten to true
+ */
 export function isUserIsOnTheirOwnPoolPage(): boolean {
-  return getUserId() === getPoolItemsPageId();
+  return true;
 }
 
 export function getTagBlacklist(): string {

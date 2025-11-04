@@ -5,6 +5,7 @@ import { DownloadRequest } from "./download_request";
 import { Events } from "../../lib/global/events/events";
 import { FAVORITES_SEARCH_GALLERY_CONTAINER } from "../../lib/global/container";
 import { Favorite } from "../../types/favorite_types";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { Preferences } from "../../lib/global/preferences/preferences";
 import { insertHTMLAndExtractStyle } from "../../utils/dom/style";
 import { splitIntoChunks } from "../../utils/collection/array";
@@ -17,6 +18,8 @@ let statusContainer: HTMLElement;
 let statusHeader: HTMLElement;
 let favoritesLoaded: boolean;
 let latestSearchResults: Favorite[] = [];
+let latestSearchResultsPool: PoolItemRaw[] = [];
+let downloadIndex = 0;
 
 export function setupDownloadMenu(): void {
   FavoritesDownloader.setupFavoritesDownloader();
@@ -44,7 +47,12 @@ function getDownloadButton(): HTMLButtonElement {
   }
   button.addEventListener("click", () => {
     button.disabled = true;
-    downloadFavorites(latestSearchResults);
+
+    if (latestSearchResults.length > latestSearchResultsPool.length) {
+        downloadFavorites(latestSearchResults);
+    } else {
+        downloadPoolItems(latestSearchResultsPool);
+    }
   });
   return button;
 }
@@ -102,6 +110,11 @@ function enableAfterFavoritesLoad(): void {
   }, {
     once: true
   });
+    Events.poolItems.poolItemsLoaded.on(() => {
+        favoritesLoaded = true;
+    }, {
+        once: true
+    });
 }
 
 function openWhenDownloadButtonClicked(): void {
@@ -118,6 +131,19 @@ function openWhenDownloadButtonClicked(): void {
     document.body.classList.add("dialog-opened");
 
   });
+    Events.poolItems.downloadButtonClicked.on(() => {
+
+        if (favoritesLoaded) {
+            downloadButton.disabled = false;
+            dialog.showModal();
+            statusHeader.textContent = `Download ${latestSearchResultsPool.length} Results`;
+        } else {
+            warningDialog.showModal();
+        }
+        Events.toggleGlobalInputEvents(false);
+        document.body.classList.add("dialog-opened");
+
+    });
 }
 
 function setupMenuCancelHandler(): void {
@@ -154,6 +180,9 @@ function keepTrackOfSearchResults(): void {
   Events.favorites.searchResultsUpdated.on((results: Favorite[]) => {
     latestSearchResults = results;
   });
+    Events.poolItems.searchResultsUpdated.on((results: PoolItemRaw[]) => {
+        latestSearchResultsPool = results;
+    });
 }
 
 function setupMenuBatchSizeSelect(): void {
@@ -180,6 +209,8 @@ function clearStatusTextRows(): void {
 async function downloadFavorites(favorites: Favorite[]): Promise<void> {
   const favoriteCount = favorites.length;
 
+  downloadIndex = favoriteCount;
+
   if (favoriteCount === 0) {
     finishDownload();
     return;
@@ -204,10 +235,47 @@ async function downloadFavorites(favorites: Favorite[]): Promise<void> {
     batchProgressRow.textContent = `Batch: ${i + 1} / ${batches.length}`;
     totalProgressRow.textContent = `Total ${batch.length} posts`;
 
-    await FavoritesDownloader.startDownloading(batch, progressCallback);
+    await FavoritesDownloader.startDownloading(batch, progressCallback, downloadIndex);
+      downloadIndex -= batches[i].length;
   }
   statusHeader.textContent = `Downloaded ${favoriteCount} Results`;
   finishDownload();
+}
+
+async function downloadPoolItems(favorites: PoolItemRaw[]): Promise<void> {
+    const favoriteCount = favorites.length;
+
+    downloadIndex = favoriteCount;
+
+    if (favoriteCount === 0) {
+        finishDownload();
+        return;
+    }
+    dialog.classList.add("downloading");
+    statusHeader.textContent = `Downloading ${favoriteCount} Results`;
+    const batches = splitIntoChunks(favorites, Preferences.downloadBatchSize.value);
+    const totalProgressRow = createStatusTextRow();
+    const batchProgressRow = createStatusTextRow();
+    const fileNameRow = createStatusTextRow();
+    let totalCount = 0;
+
+    const progressCallback = (request: DownloadRequest): void => {
+        totalCount += 1;
+        totalProgressRow.textContent = `Downloading: ${totalCount} / ${favoriteCount}`;
+        fileNameRow.textContent = `${request.filename}`;
+    };
+
+    for (let i = 0; i < batches.length; i += 1) {
+        const batch = batches[i];
+
+        batchProgressRow.textContent = `Batch: ${i + 1} / ${batches.length}`;
+        totalProgressRow.textContent = `Total ${batch.length} posts`;
+
+        await FavoritesDownloader.startDownloadingPool(batch, progressCallback, downloadIndex);
+        downloadIndex -= batches[i].length;
+    }
+    statusHeader.textContent = `Downloaded ${favoriteCount} Results`;
+    finishDownload();
 }
 
 function finishDownload(): void {

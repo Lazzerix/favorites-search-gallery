@@ -1,6 +1,6 @@
 import { awesompleteIsUnselected, awesompleteIsVisible, hideAwesomplete } from "../../../../utils/dom/awesomplete";
 import { Events } from "../../../../lib/global/events/events";
-import { PoolItemsMouseEvent } from "../../../../types/input_types";
+import { FavoritesMouseEvent } from "../../../../types/input_types";
 import { ON_MOBILE_DEVICE } from "../../../../lib/global/flags/intrinsic_flags";
 import { SearchHistory } from "./pool_items_search_history";
 import { createDesktopSearchBar } from "./pool_items_desktop_search_box";
@@ -9,8 +9,8 @@ import { debounceAfterFirstCall } from "../../../../utils/misc/async";
 import { openSearchPage } from "../../../../utils/dom/links";
 
 let SEARCH_BOX: HTMLTextAreaElement | HTMLInputElement;
-const PARENT_ID: string = "left-poolItems-panel-top-row";
-const ID: string = "poolItems-search-box";
+const PARENT_ID: string = "left-favorites-panel-top-row";
+const ID: string = "favorites-search-box";
 const SEARCH_HISTORY: SearchHistory = new SearchHistory(30);
 
 function addEventListenersToSearchBox(): void {
@@ -75,7 +75,7 @@ function updateLastEditedSearchQuery(): void {
 }
 
 function onSearchButtonClicked(event: MouseEvent): void {
-  const mouseEvent = new PoolItemsMouseEvent(event);
+  const mouseEvent = new FavoritesMouseEvent(event);
 
   if (mouseEvent.rightClick || mouseEvent.ctrlKey) {
     openSearchPage(SEARCH_BOX.value);

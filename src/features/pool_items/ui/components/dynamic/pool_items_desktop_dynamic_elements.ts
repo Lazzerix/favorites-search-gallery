@@ -20,7 +20,7 @@ import { tryResetting } from "../../../../../lib/flows/reset";
 
 const BUTTONS: Partial<ButtonElement>[] = [
   {
-    id: "search-button", parentId: "left-poolItems-panel-top-row",
+    id: "search-button", parentId: "left-favorites-panel-top-row",
     title: "Search poolItems\nctrl+click/right-click: Search all of rule34 in a new tab",
     position: "afterbegin",
     textContent: "Search",
@@ -29,35 +29,35 @@ const BUTTONS: Partial<ButtonElement>[] = [
   },
   {
     id: "shuffle-button",
-    parentId: "left-poolItems-panel-top-row",
+    parentId: "left-favorites-panel-top-row",
     textContent: "Shuffle",
     title: "Randomize order of search results",
     event: Events.poolItems.shuffleButtonClicked
   },
   {
     id: "invert-button",
-    parentId: "left-poolItems-panel-top-row",
+    parentId: "left-favorites-panel-top-row",
     textContent: "Invert",
     title: "Show results not matched by latest search",
     event: Events.poolItems.invertButtonClicked
   },
   {
     id: "clear-button",
-    parentId: "left-poolItems-panel-top-row",
+    parentId: "left-favorites-panel-top-row",
     textContent: "Clear",
     title: "Empty the search box",
     event: Events.poolItems.clearButtonClicked
   },
   {
     id: "download-button",
-    parentId: "left-poolItems-panel-top-row",
+    parentId: "left-favorites-panel-top-row",
     textContent: "Download",
     title: "Download search results (experimental)",
     event: Events.poolItems.downloadButtonClicked
   },
   {
     id: "subset-button",
-    parentId: "left-poolItems-panel-top-row",
+    parentId: "left-favorites-panel-top-row",
     textContent: "Set Subset",
     title: "Make the current search results the entire set of results to search from",
     enabled: false,
@@ -65,7 +65,7 @@ const BUTTONS: Partial<ButtonElement>[] = [
   },
   {
     id: "stop-subset-button",
-    parentId: "left-poolItems-panel-top-row",
+    parentId: "left-favorites-panel-top-row",
     textContent: "Stop Subset",
     title: "Stop subset and return entire set of results to all poolItems",
     enabled: false,
@@ -73,7 +73,7 @@ const BUTTONS: Partial<ButtonElement>[] = [
   },
   {
     id: "reset-button",
-    parentId: "left-poolItems-panel-top-row",
+    parentId: "left-favorites-panel-top-row",
     textContent: "Reset",
     title: "Delete cached poolItems and reset preferences",
     function: tryResetting,
@@ -107,7 +107,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "enhance-search-pages",
-    parentId: "pool_item-options-left",
+    parentId: "favorite-options-left",
     textContent: "Enhance Search Pages",
     title: "Enable gallery and other features on search pages",
     preference: Preferences.searchPagesEnabled,
@@ -116,7 +116,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "infinite-scroll",
-    parentId: "pool_item-options-left",
+    parentId: "favorite-options-left",
     textContent: "Infinite Scroll",
     title: "Use infinite scroll (waterfall) instead of pages",
     preference: Preferences.infiniteScrollEnabled,
@@ -124,10 +124,10 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
     event: Events.poolItems.infiniteScrollToggled
   },
   {
-    id: "show-remove-pool_item-buttons",
-    parentId: "pool_item-options-left",
+    id: "show-remove-favorite-buttons",
+    parentId: "favorite-options-left",
     textContent: "Remove Buttons",
-    title: "Toggle remove pool_item buttons",
+    title: "Toggle remove favorite buttons",
     enabled: USER_IS_ON_THEIR_OWN_POOL_PAGE,
     preference: Preferences.removeButtonsVisible,
     hotkey: "R",
@@ -135,10 +135,10 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
     event: Events.poolItems.removeButtonsToggled
   },
   {
-    id: "show-add-pool_item-buttons",
-    parentId: "pool_item-options-left",
+    id: "show-add-favorite-buttons",
+    parentId: "favorite-options-left",
     textContent: "Add Favorite Buttons",
-    title: "Toggle add pool_item buttons",
+    title: "Toggle add favorite buttons",
     enabled: !USER_IS_ON_THEIR_OWN_POOL_PAGE,
     preference: Preferences.addButtonsVisible,
     function: toggleAddOrRemoveButtons,
@@ -147,7 +147,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "show-download-buttons",
-    parentId: "pool_item-options-left",
+    parentId: "favorite-options-left",
     textContent: "Download Buttons",
     title: "Toggle download buttons",
     enabled: true,
@@ -158,7 +158,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "exclude-blacklist",
-    parentId: "pool_item-options-left",
+    parentId: "favorite-options-left",
     textContent: "Exclude Blacklist",
     title: "Exclude poolItems with blacklisted tags from search",
     enabled: USER_IS_ON_THEIR_OWN_POOL_PAGE,
@@ -168,7 +168,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "show-hints",
-    parentId: "pool_item-options-left",
+    parentId: "favorite-options-left",
     textContent: "Hotkey Hints",
     title: "Show hotkeys",
     preference: Preferences.hintsEnabled,
@@ -179,7 +179,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "enable-autoplay",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Autoplay",
     title: "Enable autoplay in gallery",
     enabled: GALLERY_ENABLED,
@@ -189,7 +189,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "show-on-hover",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Fullscreen on Hover",
     title: "View full resolution images or play videos and GIFs when hovering over a thumbnail",
     enabled: GALLERY_ENABLED,
@@ -199,7 +199,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "show-tooltips",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Tooltips",
     title: "Show tags when hovering over a thumbnail and see which ones were matched by a search",
     enabled: TOOLTIP_ENABLED,
@@ -209,7 +209,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "show-captions",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Details",
     title: "Show details when hovering over thumbnail",
     enabled: CAPTIONS_ENABLED,
@@ -219,7 +219,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "toggle-header",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Header",
     title: "Toggle site header",
     preference: Preferences.headerEnabled,
@@ -230,7 +230,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "dark-theme",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Dark Theme",
     title: "Toggle dark theme",
     defaultValue: usingDarkTheme(),
@@ -240,7 +240,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "use-aliases",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Aliases",
     title: "Alias similar tags",
     enabled: false,
@@ -249,7 +249,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "show-saved-search-suggestions",
-    parentId: "pool_item-options-right",
+    parentId: "favorite-options-right",
     textContent: "Saved Suggestions",
     title: "Show saved search suggestions in autocomplete dropdown",
     enabled: false,
@@ -268,7 +268,7 @@ const CHECKBOXES: Partial<CheckboxElement>[] = [
   },
   {
     id: "enable-gallery-menu",
-    parentId: "pool_item-options-left",
+    parentId: "favorite-options-left",
     textContent: "Gallery Menu",
     title: "Show menu in gallery",
     enabled: GALLERY_ENABLED && GeneralSettings.galleryMenuOptionEnabled,

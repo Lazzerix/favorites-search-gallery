@@ -20,7 +20,7 @@ export function createFooter(): void {
 }
 
 export function moveStatusToFooter(): void {
-  const status = document.getElementById("poolItems-load-status");
+  const status = document.getElementById("favorites-load-status");
   const footerTop = document.getElementById("mobile-footer-top");
 
   if (status === null || footerTop === null) {

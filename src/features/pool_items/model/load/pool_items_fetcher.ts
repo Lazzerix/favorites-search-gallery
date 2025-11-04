@@ -5,6 +5,7 @@ import { PoolItemsPageRequest } from "./pool_items_page_request";
 import { PoolItemsSettings } from "../../../../config/pool_items_settings";
 import { extractPoolItems } from "./pool_items_extractor";
 import { sleep } from "../../../../utils/misc/async";
+import * as PoolItemsModel from "../pool_items_model";
 
 const PENDING_REQUEST_PAGE_NUMBERS = new Set<number>();
 const FAILED_REQUESTS: PoolItemsPageRequest[] = [];
@@ -67,7 +68,7 @@ async function fetchNextPoolItemsPage(): Promise<void> {
   const request = nextFetchRequest();
 
   if (request === null) {
-    await sleep(200);
+    await sleep(2);
     return;
   }
   await fetchPoolItemsPageHelper(request);
@@ -144,11 +145,16 @@ function extractNewPoolItems(html: string): { allNewPoolItemsFound: boolean, new
 }
 
 export async function fetchAllPoolItems(onPoolItemsFound: (poolItems: PoolItem[]) => void): Promise<void> {
-  PoolItemsFetchQueue.setDequeueCallback(onPoolItemsFound);
+    console.log("PoolItemsFetcher.fetchAllPoolItems Start");
+    PoolItemsFetchQueue.setDequeueCallback(onPoolItemsFound);
+    console.log("PoolItemsFetcher.fetchAllPoolItems Mid");
 
-  while (someRequestsAreIncomplete()) {
-    await fetchNextPoolItemsPage();
-  }
+
+    while (someRequestsAreIncomplete() && PoolItemsModel.getAllPoolItems().length < Number(await API.getPoolItemsCount())) {
+        console.log(`PoolItemsFetcher.fetchAllPoolItems Loop ${someRequestsAreIncomplete()} ${allRequestsHaveStarted()} ${noRequestsArePending()} ${PENDING_REQUEST_PAGE_NUMBERS.size}`);
+        await fetchNextPoolItemsPage();
+    }
+    console.log("PoolItemsFetcher.fetchAllPoolItems End");
 }
 
 export async function fetchNewPoolItemsOnReload(ids: Set<string>): Promise<PoolItem[]> {
