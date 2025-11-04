@@ -1,5 +1,6 @@
 import { getFavoritesPageId, getUserId } from "../../utils/misc/favorites_page_metadata";
 import { ON_MOBILE_DEVICE } from "../global/flags/intrinsic_flags";
+import {getPoolItemsPageId} from "../../utils/misc/pool_items_page_metadata";
 
 const PRIVATE_SERVER_ORIGIN = "https://favorites-search-gallery-api.onrender.com";
 const PRIVATE_API_BASE_URL = `${PRIVATE_SERVER_ORIGIN}/?userId=${getUserId()}`;
@@ -18,6 +19,7 @@ const ORIGIN = "https://rule34.xxx";
 const POST_PAGE_URL = `${ORIGIN}/index.php?page=post&s=view&id=`;
 const SEARCH_PAGE_URL = `${ORIGIN}/index.php?page=post&s=list&tags=`;
 const FAVORITES_PAGE_URL = `${ORIGIN}/index.php?page=favorites&s=view&id=${getFavoritesPageId()}`;
+const POOL_PAGE_URL = `${ORIGIN}/index.php?page=pool&s=show&id=${getPoolItemsPageId()}`;
 const PROFILE_PAGE_URL = `${ORIGIN}/index.php?page=account&s=profile&id=`;
 
 const POST_VOTE_URL = `${ORIGIN}/index.php?page=post&s=vote&type=up&id=`;
@@ -37,6 +39,10 @@ export function createSearchPageURL(searchQuery: string): string {
 
 export function createFavoritesPageURL(pageNumber: number): string {
   return `${FAVORITES_PAGE_URL}&pid=${pageNumber}`;
+}
+
+export function createPoolPageURL(pageNumber: number): string {
+    return `${POOL_PAGE_URL}&pid=${pageNumber}`;
 }
 
 export function createProfilePageURL(id: string): string {

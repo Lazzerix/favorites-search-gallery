@@ -1,5 +1,6 @@
 import { ConcurrencyLimiter } from "../components/concurrency_limiter";
 import { Favorite } from "../../types/favorite_types";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { getOriginalImageURLWithJPGExtension } from "./api_content";
 
 const CONCURRENCY = 5;
@@ -12,8 +13,8 @@ const VIDEO_POOL: HTMLVideoElement[] = Array.from({ length: CONCURRENCY }, () =>
   return v;
 });
 
-export function getVideoDurationFromFavorite(favorite: Favorite): Promise<number> {
-  return getVideoDuration(getOriginalImageURLWithJPGExtension(favorite).replace(".jpg", ".mp4"));
+export function getVideoDurationFromFavorite(item: Favorite | PoolItemRaw): Promise<number> {
+  return getVideoDuration(getOriginalImageURLWithJPGExtension(item).replace(".jpg", ".mp4"));
 }
 
 export function getVideoDuration(url: string): Promise<number> {

@@ -2,11 +2,12 @@ import { convertToTagString, getContentType } from "../primitive/string";
 import { ContentType } from "../../types/common_types";
 import { Favorite } from "../../types/favorite_types";
 import { ON_SEARCH_PAGE } from "../../lib/global/flags/intrinsic_flags";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { getImageFromThumb } from "../dom/dom";
 import { getTagSetFromItem } from "../dom/tags";
 
-function isFavoriteContentType(favorite: Favorite, contentType: ContentType): boolean {
-  return getContentType(favorite.tags) === contentType;
+function isFavoriteContentType(item: Favorite | PoolItemRaw, contentType: ContentType): boolean {
+  return getContentType(item.tags) === contentType;
 }
 
 function isThumbContentType(thumb: HTMLElement, contentType: ContentType): boolean {
@@ -14,16 +15,16 @@ function isThumbContentType(thumb: HTMLElement, contentType: ContentType): boole
   return image !== null && getContentType(getTagSetFromItem(thumb)) === contentType;
 }
 
-function isContentType(item: HTMLElement | Favorite, contentType: ContentType): boolean {
+function isContentType(item: HTMLElement | Favorite | PoolItemRaw, contentType: ContentType): boolean {
   if (item instanceof HTMLElement) {
     return isThumbContentType(item, contentType);
   }
   return isFavoriteContentType(item, contentType);
 }
 
-export const isVideo = (item: HTMLElement | Favorite): boolean => isContentType(item, "video");
-export const isGif = (item: HTMLElement | Favorite): boolean => isContentType(item, "gif");
-export const isImage = (item: HTMLElement | Favorite): boolean => isContentType(item, "image");
+export const isVideo = (item: HTMLElement | Favorite | PoolItemRaw): boolean => isContentType(item, "video");
+export const isGif = (item: HTMLElement | Favorite | PoolItemRaw): boolean => isContentType(item, "gif");
+export const isImage = (item: HTMLElement | Favorite | PoolItemRaw): boolean => isContentType(item, "image");
 
 export function forceImageContentType(thumb: HTMLElement): void {
   if (!ON_SEARCH_PAGE) {

@@ -1,5 +1,6 @@
 import { convertImageURLToSampleURL, convertPreviewURLToImageURL, removeIdFromImageURL } from "../../utils/content/image_url";
 import { Favorite } from "../../types/favorite_types";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { getExtension } from "../global/extensions";
 import { getPreviewURL } from "../../utils/dom/dom";
 
@@ -28,6 +29,6 @@ export async function getOriginalContentURL(item: HTMLElement | Favorite): Promi
   return getOriginalImageURLWithJPGExtension(item).replace(".jpg", `.${await getExtension(item)}`);
 }
 
-export function getOriginalImageURLWithJPGExtension(item: HTMLElement | Favorite): string {
+export function getOriginalImageURLWithJPGExtension(item: HTMLElement | Favorite | PoolItemRaw): string {
   return removeIdFromImageURL(convertPreviewURLToImageURL(getPreviewURL(item) ?? ""));
 }

@@ -22,6 +22,7 @@ import { webWorker } from "./WEB_worker_plugin.mjs";
 // @compatible   Opera
 // @match        https://rule34.xxx/index.php?page=favorites&s=view&id=*
 // @match        https://rule34.xxx/index.php?page=post&s=list*
+// @match        https://rule34.xxx/index.php?page=pool&s=show&id=*
 
 // ==/UserScript==`;
   const LOADER = {

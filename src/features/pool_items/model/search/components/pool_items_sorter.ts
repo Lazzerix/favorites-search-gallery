@@ -1,0 +1,25 @@
+import { PoolItem } from "../../../types/pool_item/pool_item";
+import { Preferences } from "../../../../../lib/global/preferences/preferences";
+import { SortingMethod } from "../../../../../types/common_types";
+import { shuffleArray } from "../../../../../utils/collection/array";
+
+let useAscendingOrder = Preferences.sortAscendingEnabled.value;
+let sortingMethod: SortingMethod = Preferences.sortingMethod.value;
+
+export function setAscendingOrder(value: boolean): void {
+  useAscendingOrder = value;
+}
+
+export function setSortingMethod(value: SortingMethod): void {
+  sortingMethod = value;
+}
+
+export function sortPoolItems(poolItems: PoolItem[]): PoolItem[] {
+  const toSort = poolItems.slice();
+
+  if (sortingMethod === "random") {
+    return shuffleArray(toSort);
+  }
+  toSort.sort((a, b) => b.metrics[sortingMethod] - a.metrics[sortingMethod]);
+  return useAscendingOrder ? toSort.reverse() : toSort;
+}

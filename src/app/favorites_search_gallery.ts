@@ -5,6 +5,7 @@ import { setupDownloadMenu } from "../features/downloader/downloader_menu";
 import { setupFavorites } from "../features/favorites/controller/flows/setup/favorites_setup_flow";
 import { setupGallery } from "../features/gallery/controller/flows/setup/gallery_setup_flow";
 import { setupGlobals } from "../lib/flows/setup";
+import { setupPoolItems } from "../features/pool_items/controller/flows/setup/pool_items_setup_flow";
 import { setupSavedSearches } from "../features/saved_searches/saved_searches";
 import { setupSearchPage } from "../features/search_page/controller/flows/search_page_setup_flow";
 import { setupTagModifier } from "../features/tag_modifier/tag_modifier";
@@ -13,6 +14,7 @@ import { setupTooltip } from "../features/tooltip/tooltip";
 function runFavoritesSearchGallery(): void {
   setupGlobals();
   setupFavorites();
+  setupPoolItems();
   setupSearchPage();
   setupGallery();
   setupSavedSearches();

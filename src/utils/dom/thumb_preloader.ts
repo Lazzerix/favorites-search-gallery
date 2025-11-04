@@ -1,9 +1,14 @@
 import { Favorite } from "../../types/favorite_types";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { sleep } from "../misc/async";
 import { waitForAllThumbnailsToLoad } from "./dom";
 
 export function preloadThumbnails(favorites: Favorite[]): void {
   preloadImages(favorites.map(favorite => favorite.thumbURL));
+}
+
+export function preloadThumbnailsPoolItem(poolItemsRaw: PoolItemRaw[]): void {
+    preloadImages(poolItemsRaw.map(poolItemRaw => poolItemRaw.thumbURL));
 }
 
 export async function preloadImages(urls: string[]): Promise<void> {

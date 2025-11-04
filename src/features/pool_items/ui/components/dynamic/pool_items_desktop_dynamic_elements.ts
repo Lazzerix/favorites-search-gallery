@@ -1,0 +1,423 @@
+import { ButtonElement, CheckboxElement, NumberElement, SelectElement } from "../../../../../types/element_types";
+import { CAPTIONS_ENABLED, GALLERY_ENABLED, TOOLTIP_ENABLED } from "../../../../../lib/global/flags/derived_flags";
+import { Layout, MetadataMetric, PerformanceProfile } from "../../../../../types/common_types";
+import { createCheckboxElement, createCheckboxOption } from "../../../../../lib/ui/checkbox";
+import { reloadWindow, toggleGalleryMenuEnabled } from "../../../../../utils/dom/dom";
+import { toggleAddOrRemoveButtons, toggleDownloadButtons, toggleHeader } from "../../../../../utils/dom/ui_element";
+import { toggleDarkTheme, usingDarkTheme } from "../../../../../utils/dom/style";
+import { toggleOptionHotkeyHints, togglePoolItemsOptions, toggleUI } from "../../pool_items_menu_event_handlers";
+import { Events } from "../../../../../lib/global/events/events";
+import { GeneralSettings } from "../../../../../config/general_settings";
+import { PoolItemsSettings } from "../../../../../config/pool_items_settings";
+import { Preferences } from "../../../../../lib/global/preferences/preferences";
+import { USER_IS_ON_THEIR_OWN_POOL_PAGE } from "../../../../../lib/global/flags/intrinsic_flags";
+import { createButtonElement } from "../../../../../lib/ui/button";
+import { createNumberComponent } from "../../../../../lib/ui/number";
+import { createSelectElement } from "../../../../../lib/ui/select";
+import { hideUnusedLayoutSizer } from "../../../../../lib/global/content/tilers/tiler_event_handlers";
+import { prepareDynamicElements } from "../../../../../lib/ui/element_utils";
+import { tryResetting } from "../../../../../lib/flows/reset";
+
+const BUTTONS: Partial<ButtonElement>[] = [
+  {
+    id: "search-button", parentId: "left-poolItems-panel-top-row",
+    title: "Search poolItems\nctrl+click/right-click: Search all of rule34 in a new tab",
+    position: "afterbegin",
+    textContent: "Search",
+    rightClickEnabled: true,
+    event: Events.poolItems.searchButtonClicked
+  },
+  {
+    id: "shuffle-button",
+    parentId: "left-poolItems-panel-top-row",
+    textContent: "Shuffle",
+    title: "Randomize order of search results",
+    event: Events.poolItems.shuffleButtonClicked
+  },
+  {
+    id: "invert-button",
+    parentId: "left-poolItems-panel-top-row",
+    textContent: "Invert",
+    title: "Show results not matched by latest search",
+    event: Events.poolItems.invertButtonClicked
+  },
+  {
+    id: "clear-button",
+    parentId: "left-poolItems-panel-top-row",
+    textContent: "Clear",
+    title: "Empty the search box",
+    event: Events.poolItems.clearButtonClicked
+  },
+  {
+    id: "download-button",
+    parentId: "left-poolItems-panel-top-row",
+    textContent: "Download",
+    title: "Download search results (experimental)",
+    event: Events.poolItems.downloadButtonClicked
+  },
+  {
+    id: "subset-button",
+    parentId: "left-poolItems-panel-top-row",
+    textContent: "Set Subset",
+    title: "Make the current search results the entire set of results to search from",
+    enabled: false,
+    event: Events.poolItems.searchSubsetClicked
+  },
+  {
+    id: "stop-subset-button",
+    parentId: "left-poolItems-panel-top-row",
+    textContent: "Stop Subset",
+    title: "Stop subset and return entire set of results to all poolItems",
+    enabled: false,
+    event: Events.poolItems.stopSearchSubsetClicked
+  },
+  {
+    id: "reset-button",
+    parentId: "left-poolItems-panel-top-row",
+    textContent: "Reset",
+    title: "Delete cached poolItems and reset preferences",
+    function: tryResetting,
+    event: Events.poolItems.resetButtonClicked
+  }
+
+];
+
+const CHECKBOXES: Partial<CheckboxElement>[] = [
+  {
+    id: "options",
+    parentId: "bottom-panel-1",
+    textContent: "More Options",
+    title: "Show more options",
+    preference: Preferences.optionsVisible,
+    hotkey: "O",
+    function: togglePoolItemsOptions,
+    triggerOnCreation: true,
+    event: Events.poolItems.optionsToggled
+  },
+  {
+    id: "show-ui",
+    parentId: "show-ui-wrapper",
+    textContent: "UI",
+    title: "Toggle UI",
+    preference: Preferences.uiVisible,
+    hotkey: "U",
+    function: toggleUI,
+    triggerOnCreation: true,
+    event: Events.poolItems.uiToggled
+  },
+  {
+    id: "enhance-search-pages",
+    parentId: "pool_item-options-left",
+    textContent: "Enhance Search Pages",
+    title: "Enable gallery and other features on search pages",
+    preference: Preferences.searchPagesEnabled,
+    hotkey: "",
+    savePreference: true
+  },
+  {
+    id: "infinite-scroll",
+    parentId: "pool_item-options-left",
+    textContent: "Infinite Scroll",
+    title: "Use infinite scroll (waterfall) instead of pages",
+    preference: Preferences.infiniteScrollEnabled,
+    hotkey: "",
+    event: Events.poolItems.infiniteScrollToggled
+  },
+  {
+    id: "show-remove-pool_item-buttons",
+    parentId: "pool_item-options-left",
+    textContent: "Remove Buttons",
+    title: "Toggle remove pool_item buttons",
+    enabled: USER_IS_ON_THEIR_OWN_POOL_PAGE,
+    preference: Preferences.removeButtonsVisible,
+    hotkey: "R",
+    function: toggleAddOrRemoveButtons,
+    event: Events.poolItems.removeButtonsToggled
+  },
+  {
+    id: "show-add-pool_item-buttons",
+    parentId: "pool_item-options-left",
+    textContent: "Add Favorite Buttons",
+    title: "Toggle add pool_item buttons",
+    enabled: !USER_IS_ON_THEIR_OWN_POOL_PAGE,
+    preference: Preferences.addButtonsVisible,
+    function: toggleAddOrRemoveButtons,
+    hotkey: "R",
+    event: Events.poolItems.addButtonsToggled
+  },
+  {
+    id: "show-download-buttons",
+    parentId: "pool_item-options-left",
+    textContent: "Download Buttons",
+    title: "Toggle download buttons",
+    enabled: true,
+    preference: Preferences.downloadButtonsVisible,
+    hotkey: "",
+    function: toggleDownloadButtons,
+    event: Events.poolItems.downloadButtonsToggled
+  },
+  {
+    id: "exclude-blacklist",
+    parentId: "pool_item-options-left",
+    textContent: "Exclude Blacklist",
+    title: "Exclude poolItems with blacklisted tags from search",
+    enabled: USER_IS_ON_THEIR_OWN_POOL_PAGE,
+    preference: Preferences.excludeBlacklistEnabled,
+    hotkey: "",
+    event: Events.poolItems.blacklistToggled
+  },
+  {
+    id: "show-hints",
+    parentId: "pool_item-options-left",
+    textContent: "Hotkey Hints",
+    title: "Show hotkeys",
+    preference: Preferences.hintsEnabled,
+    hotkey: "H",
+    event: Events.poolItems.hintsToggled,
+    triggerOnCreation: true,
+    function: toggleOptionHotkeyHints
+  },
+  {
+    id: "enable-autoplay",
+    parentId: "pool_item-options-right",
+    textContent: "Autoplay",
+    title: "Enable autoplay in gallery",
+    enabled: GALLERY_ENABLED,
+    preference: Preferences.autoplayActive,
+    hotkey: "",
+    event: Events.poolItems.autoplayToggled
+  },
+  {
+    id: "show-on-hover",
+    parentId: "pool_item-options-right",
+    textContent: "Fullscreen on Hover",
+    title: "View full resolution images or play videos and GIFs when hovering over a thumbnail",
+    enabled: GALLERY_ENABLED,
+    preference: Preferences.showOnHoverEnabled,
+    hotkey: "",
+    event: Events.poolItems.showOnHoverToggled
+  },
+  {
+    id: "show-tooltips",
+    parentId: "pool_item-options-right",
+    textContent: "Tooltips",
+    title: "Show tags when hovering over a thumbnail and see which ones were matched by a search",
+    enabled: TOOLTIP_ENABLED,
+    preference: Preferences.tooltipsVisible,
+    hotkey: "T",
+    event: Events.poolItems.tooltipsToggled
+  },
+  {
+    id: "show-captions",
+    parentId: "pool_item-options-right",
+    textContent: "Details",
+    title: "Show details when hovering over thumbnail",
+    enabled: CAPTIONS_ENABLED,
+    preference: Preferences.captionsVisible,
+    hotkey: "D",
+    event: Events.poolItems.captionsToggled
+  },
+  {
+    id: "toggle-header",
+    parentId: "pool_item-options-right",
+    textContent: "Header",
+    title: "Toggle site header",
+    preference: Preferences.headerEnabled,
+    hotkey: "",
+    event: Events.poolItems.headerToggled,
+    triggerOnCreation: true,
+    function: toggleHeader
+  },
+  {
+    id: "dark-theme",
+    parentId: "pool_item-options-right",
+    textContent: "Dark Theme",
+    title: "Toggle dark theme",
+    defaultValue: usingDarkTheme(),
+    hotkey: "",
+    event: Events.poolItems.darkThemeToggled,
+    function: toggleDarkTheme
+  },
+  {
+    id: "use-aliases",
+    parentId: "pool_item-options-right",
+    textContent: "Aliases",
+    title: "Alias similar tags",
+    enabled: false,
+    preference: Preferences.tagAliasingEnabled,
+    hotkey: "A"
+  },
+  {
+    id: "show-saved-search-suggestions",
+    parentId: "pool_item-options-right",
+    textContent: "Saved Suggestions",
+    title: "Show saved search suggestions in autocomplete dropdown",
+    enabled: false,
+    preference: Preferences.savedSearchSuggestionsEnabled,
+    hotkey: "",
+    savePreference: true
+  },
+  {
+    id: "show-saved-searches",
+    parentId: "bottom-panel-2",
+    textContent: "Saved Searches",
+    title: "Show saved searches",
+    enabled: true,
+    preference: Preferences.savedSearchesVisible,
+    event: Events.poolItems.savedSearchesToggled
+  },
+  {
+    id: "enable-gallery-menu",
+    parentId: "pool_item-options-left",
+    textContent: "Gallery Menu",
+    title: "Show menu in gallery",
+    enabled: GALLERY_ENABLED && GeneralSettings.galleryMenuOptionEnabled,
+    function: toggleGalleryMenuEnabled,
+    preference: Preferences.galleryMenuEnabled,
+    event: Events.poolItems.galleryMenuToggled
+  }
+];
+
+const SIMPLE_CHECKBOXES: Partial<CheckboxElement>[] = [
+  {
+    id: "sort-ascending",
+    parentId: "sort-inputs",
+    position: "beforeend",
+    preference: Preferences.sortAscendingEnabled,
+    event: Events.poolItems.sortAscendingToggled
+  }
+];
+
+const SELECTS: (Partial<SelectElement<Layout>> | Partial<SelectElement<MetadataMetric>> | Partial<SelectElement<PerformanceProfile>>)[] = [
+  {
+    id: "sorting-method",
+    parentId: "sort-inputs",
+    title: "Change sorting order of search results",
+    position: "beforeend",
+    preference: Preferences.sortingMethod,
+    event: Events.poolItems.sortingMethodChanged,
+    options: new Map<MetadataMetric, string>([
+      ["default", "Default"],
+      ["score", "Score"],
+      ["width", "Width"],
+      ["height", "Height"],
+      ["creationTimestamp", "Date Uploaded"],
+      ["lastChangedTimestamp", "Date Changed"],
+      ["duration", "Duration"],
+      ["id", "ID"],
+      ["random", "Random"]
+    ])
+  },
+  {
+    id: "layout-select",
+    parentId: "layout-container",
+    title: "Change layout",
+    position: "beforeend",
+    preference: Preferences.poolItemsLayout,
+    event: Events.poolItems.layoutChanged,
+    function: hideUnusedLayoutSizer,
+    options: new Map<Layout, string>([
+      ["column", "Waterfall"],
+      ["row", "River"],
+      ["square", "Square"],
+      ["grid", "Legacy"],
+      ["native", "Native"]
+    ])
+  },
+  {
+    id: "performance-profile",
+    parentId: "performance-profile-container",
+    title: "Improve performance by disabling features",
+    position: "beforeend",
+    preference: Preferences.performanceProfile,
+    event: Events.poolItems.performanceProfileChanged,
+    function: reloadWindow,
+    isNumeric: true,
+    options: new Map<PerformanceProfile, string>([
+      [PerformanceProfile.NORMAL, "Normal"],
+      [PerformanceProfile.MEDIUM, "Medium (no upscaling)"],
+      [PerformanceProfile.LOW, "Low (no gallery)"],
+      [PerformanceProfile.POTATO, "Potato (only search)"]
+    ])
+  }
+];
+
+const NUMBERS: Partial<NumberElement>[] = [
+  {
+    id: "column-count",
+    parentId: "column-count-container",
+    position: "beforeend",
+    preference: Preferences.columnCount,
+    min: GeneralSettings.columnCountBounds.min,
+    max: GeneralSettings.columnCountBounds.max,
+    step: 1,
+    pollingTime: 50,
+    triggerOnCreation: true,
+    event: Events.poolItems.columnCountChanged
+  },
+
+  {
+    id: "row-size",
+    parentId: "row-size-container",
+    position: "beforeend",
+    preference: Preferences.rowSize,
+    min: GeneralSettings.rowSizeBounds.min,
+    max: GeneralSettings.rowSizeBounds.max,
+    step: 1,
+    pollingTime: 50,
+    triggerOnCreation: true,
+    event: Events.poolItems.rowSizeChanged
+  },
+
+  {
+    id: "results-per-page",
+    parentId: "results-per-page-container",
+    position: "beforeend",
+    preference: Preferences.resultsPerPage,
+    min: PoolItemsSettings.resultsPerPageBounds.min,
+    max: PoolItemsSettings.resultsPerPageBounds.max,
+    step: PoolItemsSettings.resultsPerPageStep,
+    pollingTime: 50,
+    triggerOnCreation: false,
+    event: Events.poolItems.resultsPerPageChanged
+  }
+];
+
+function createButtons(): void {
+  for (const button of prepareDynamicElements(BUTTONS)) {
+    createButtonElement(button);
+  }
+}
+
+function createCheckboxes(): void {
+  for (const checkbox of prepareDynamicElements(CHECKBOXES)) {
+    createCheckboxOption(checkbox);
+  }
+}
+
+function createSelects(): void {
+  //  @ts-expect-error don't care
+  for (const select of prepareDynamicElements(SELECTS)) {
+    createSelectElement(select);
+  }
+}
+
+function createNumbers(): void {
+  for (const number of prepareDynamicElements(NUMBERS)) {
+    createNumberComponent(number);
+  }
+}
+
+function createSimpleCheckboxes(): void {
+  for (const checkbox of prepareDynamicElements(SIMPLE_CHECKBOXES)) {
+    createCheckboxElement(checkbox);
+  }
+}
+
+export function createDynamicPoolItemsDesktopMenuElements(): void {
+  createButtons();
+  createCheckboxes();
+  createSimpleCheckboxes();
+  createSelects();
+  createNumbers();
+}

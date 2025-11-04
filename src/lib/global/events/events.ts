@@ -6,6 +6,8 @@ import { FAVORITES_SEARCH_GALLERY_CONTAINER } from "../container";
 import { FavoriteItem } from "../../../features/favorites/types/favorite/favorite_item";
 import { FavoritesPageRelation } from "../../../features/favorites/types/favorite/favorite_types";
 import { GalleryMenuAction } from "../../../features/gallery/types/gallery_types";
+import { PoolItemsPageRelation } from "../../../features/pool_items/types/pool_item/pool_items_types";
+import { PoolItem } from "../../../features/pool_items/types/pool_item/pool_item";
 import { SearchPage } from "../../../types/search_page";
 import { setupSwipeEvents } from "./swipe_events";
 import { setupTouchHoldEvents } from "./touch_hold_events";
@@ -66,6 +68,62 @@ const favorites = {
   clearButtonClicked: new EventEmitter<MouseEvent>(true),
   resetButtonClicked: new EventEmitter<MouseEvent>(true),
   resetConfirmed: new EventEmitter<void>(true)
+};
+
+const poolItems = {
+    searchStarted: new EventEmitter<string>(true),
+    searchBoxUpdated: new EventEmitter<void>(true),
+    pageChanged: new EventEmitter<void>(true),
+    pageSelected: new EventEmitter<number>(true),
+    relativePageSelected: new EventEmitter<PoolItemsPageRelation>(true),
+    findPoolItemStarted: new EventEmitter<string>(true),
+    findPoolItemInAllStarted: new EventEmitter<string>(true),
+    poolItemsLoadedFromDatabase: new EventEmitter<void>(true),
+    poolItemsLoaded: new EventEmitter<void>(true),
+    startedStoringAllPoolItems: new EventEmitter<void>(true),
+    startedFetchingPoolItems: new EventEmitter<void>(true),
+    searchResultsUpdated: new EventEmitter<PoolItem[]>(true),
+    poolItemRemoved: new EventEmitter<string>(true),
+    inGalleryRequest: new EventEmitter<void>(true),
+    pageChangeResponse: new EventEmitter<boolean>(true),
+    newPoolItemsFoundOnReload: new EventEmitter<PoolItem[]>(true),
+    resultsAddedToCurrentPage: new EventEmitter<HTMLElement[]>(true),
+    missingMetadataFound: new EventEmitter<string>(true),
+    poolItemsResized: new EventEmitter<void>(true),
+    captionsReEnabled: new EventEmitter<boolean>(true),
+    resultsPerPageChanged: new EventEmitter<number>(true),
+    allowedRatingsChanged: new EventEmitter<Rating>(true),
+    columnCountChanged: new EventEmitter<number>(true),
+    rowSizeChanged: new EventEmitter<number>(true),
+    layoutChanged: new EventEmitter<Layout>(true),
+    sortingMethodChanged: new EventEmitter<MetadataMetric>(true),
+    performanceProfileChanged: new EventEmitter<PerformanceProfile>(true),
+    showOnHoverToggled: new EventEmitter<boolean>(true),
+    tooltipsToggled: new EventEmitter<boolean>(true),
+    autoplayToggled: new EventEmitter<boolean>(true),
+    hintsToggled: new EventEmitter<boolean>(true),
+    optionsToggled: new EventEmitter<boolean>(true),
+    removeButtonsToggled: new EventEmitter<boolean>(true),
+    addButtonsToggled: new EventEmitter<boolean>(true),
+    downloadButtonsToggled: new EventEmitter<boolean>(true),
+    uiToggled: new EventEmitter<boolean>(true),
+    darkThemeToggled: new EventEmitter<boolean>(true),
+    headerToggled: new EventEmitter<boolean>(true),
+    captionsToggled: new EventEmitter<boolean>(true),
+    sortAscendingToggled: new EventEmitter<boolean>(true),
+    galleryMenuToggled: new EventEmitter<boolean>(true),
+    blacklistToggled: new EventEmitter<boolean>(true),
+    infiniteScrollToggled: new EventEmitter<boolean>(true),
+    savedSearchesToggled: new EventEmitter<boolean>(true),
+    downloadButtonClicked: new EventEmitter<MouseEvent>(true),
+    searchSubsetClicked: new EventEmitter<MouseEvent>(true),
+    stopSearchSubsetClicked: new EventEmitter<MouseEvent>(true),
+    invertButtonClicked: new EventEmitter<MouseEvent>(true),
+    shuffleButtonClicked: new EventEmitter<MouseEvent>(true),
+    searchButtonClicked: new EventEmitter<MouseEvent>(true),
+    clearButtonClicked: new EventEmitter<MouseEvent>(true),
+    resetButtonClicked: new EventEmitter<MouseEvent>(true),
+    resetConfirmed: new EventEmitter<void>(true)
 };
 
 const gallery = {
@@ -204,6 +262,7 @@ function broadcastDOMLoad(): void {
 
 export const Events = {
   favorites,
+  poolItems,
   gallery,
   caption,
   searchBox,

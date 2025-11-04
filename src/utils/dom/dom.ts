@@ -1,6 +1,7 @@
 import { Events } from "../../lib/global/events/events";
 import { Favorite } from "../../types/favorite_types";
 import { ON_MOBILE_DEVICE } from "../../lib/global/flags/intrinsic_flags";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { insertStyleHTML } from "./style";
 import { removeNonNumericCharacters } from "../primitive/string";
 
@@ -21,7 +22,7 @@ export function getThumbFromImage(image: HTMLElement): HTMLElement | null {
   return getClosestItem(image);
 }
 
-export function getPreviewURL(item: HTMLElement | Favorite): string | null {
+export function getPreviewURL(item: HTMLElement | Favorite | PoolItemRaw): string | null {
   if (item instanceof HTMLElement) {
     const image = getImageFromThumb(item);
     return image ? image.src : null;

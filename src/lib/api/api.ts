@@ -93,6 +93,9 @@ export async function fetchPostFromPostPage(id: string): Promise<Post> {
 export function fetchFavoritesPage(pageNumber: number): Promise<string> {
   return getHTML(FSG_URL.createFavoritesPageURL(pageNumber));
 }
+export function fetchPoolItemsPage(pageNumber: number): Promise<string> {
+    return getHTML(FSG_URL.createPoolPageURL(pageNumber));
+}
 
 export function fetchFavoritesPageSafe(pageNumber: number): Promise<string> {
   return FAVORITES_PAGE_LIMITER.run(() => {
@@ -118,6 +121,10 @@ export function removeFavorite(id: string): Promise<Response> {
 
 export function getFavoritesCount(id: string): Promise<number | null> {
   return getHTML(FSG_URL.createProfilePageURL(id)).then(extractFavoritesCount).catch(null);
+}
+
+export function getPoolItemsCount(id: string): Promise<number | null> {
+    return getHTML(FSG_URL.createProfilePageURL(id)).then(extractFavoritesCount).catch(null);
 }
 
 export function getFavoritesPageCount(): Promise<number | null> {
