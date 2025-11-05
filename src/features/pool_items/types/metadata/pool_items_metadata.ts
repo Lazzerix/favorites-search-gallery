@@ -2,7 +2,7 @@ import * as API from "../../../../lib/api/api";
 import * as Extensions from "../../../../lib/global/extensions";
 import { DiscreteRating, Post, Rating } from "../../../../types/common_types";
 import { PoolItemMetricMap, PoolItemsDatabaseRecord, PoolItemsMetadataDatabaseRecord } from "../../../../types/pool_item_types";
-import { getFavorite, validateTags } from "../pool_item/pool_item";
+import { getPoolItem, validateTags } from "../pool_item/pool_item";
 import { Events } from "../../../../lib/global/events/events";
 import { POOL_ITEMS_PER_PAGE } from "../../../../lib/global/constants";
 import { PoolItemsSettings } from "../../../../config/pool_items_settings";
@@ -175,7 +175,7 @@ export class FavoriteMetadata {
   }
 
   private async setDuration(): Promise<boolean> {
-    const poolItem = getFavorite(this.id);
+    const poolItem = getPoolItem(this.id);
 
     if (poolItem !== undefined && isVideo(poolItem) && this.metrics.duration === 0) {
       this.metrics.duration = await getVideoDurationFromFavorite(poolItem);

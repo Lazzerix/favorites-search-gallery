@@ -10,7 +10,7 @@ import { getIdFromThumb } from "../../../../utils/dom/dom";
 
 const ALL_POOL_ITEMS = new Map<string, PoolItem>();
 
-export function getFavorite(id: string): PoolItem | undefined {
+export function getPoolItem(id: string): PoolItem | undefined {
   return ALL_POOL_ITEMS.get(id);
 }
 
@@ -19,17 +19,17 @@ export function getAllPoolItems(): PoolItem[] {
 }
 
 export function validateTags(post: Post): void {
-  const favorite = getFavorite(post.id);
+  const poolItem = getPoolItem(post.id);
 
-  if (favorite !== undefined) {
-    favorite.validateTags(post);
+  if (poolItem !== undefined) {
+    poolItem.validateTags(post);
   }
 }
 
-function registerFavorite(favorite: PoolItem): void {
-  if (!ALL_POOL_ITEMS.has(favorite.id)) {
-    ALL_POOL_ITEMS.set(favorite.id, favorite);
-    POOL_ITEMS_SEARCH_INDEX.add(favorite);
+function registerPoolItem(poolItem: PoolItem): void {
+  if (!ALL_POOL_ITEMS.has(poolItem.id)) {
+    ALL_POOL_ITEMS.set(poolItem.id, poolItem);
+    POOL_ITEMS_SEARCH_INDEX.add(poolItem);
   }
 }
 
@@ -45,7 +45,7 @@ export class PoolItem implements PoolItemRaw {
     this.post = createPostFromRawFavorite(object);
     this.element = null;
     this.favoriteTags = new FavoriteTags(this.post, object);
-    registerFavorite(this);
+    registerPoolItem(this);
     this.metadata = new FavoriteMetadata(this.id, object);
   }
 

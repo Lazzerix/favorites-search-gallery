@@ -6,7 +6,7 @@ import * as PoolItemsSearchFilter from "./search/components/pool_items_search_fi
 import * as PoolItemsSorter from "./search/components/pool_items_sorter";
 import { NavigationKey, Rating, SortingMethod } from "../../../types/common_types";
 import { NewPoolItems, PoolItemsPageRelation } from "../types/pool_item/pool_items_types";
-import { PoolItem, getFavorite } from "../types/pool_item/pool_item";
+import {PoolItem, getPoolItem} from "../types/pool_item/pool_item";
 import { CONTENT_CONTAINER } from "../../../lib/global/content/content_container";
 import { ITEM_SELECTOR } from "../../../utils/dom/dom";
 import { POOL_ITEMS_SEARCH_INDEX } from "./search/index/pool_items_search_index";
@@ -21,13 +21,10 @@ export async function loadAllPoolItemsFromDatabase(): Promise<PoolItem[]> {
 }
 
 export function fetchAllPoolItems(onSearchResultsFound: () => void): Promise<void> {
-    console.log("PoolItemsModel.fetchAllPoolItems Start");
   const onPoolItemsFound = (poolItem: PoolItem[]): void => {
     latestSearchResults = latestSearchResults.concat(PoolItemsSearchFilter.filter(poolItem));
     return onSearchResultsFound();
   };
-
-    console.log("PoolItemsModel.fetchAllPoolItems End");
   return PoolItemsLoader.fetchAllPoolItems(onPoolItemsFound);
 }
 
@@ -176,9 +173,7 @@ export function deleteDatabase(): void {
 }
 
 export function keepIndexedTagsSorted(): void {
-    console.log("keepIndexedTagsSorted Start");
   POOL_ITEMS_SEARCH_INDEX.keepIndexedTagsSorted(true);
-    console.log("keepIndexedTagsSorted End");
 }
 
 export function buildSearchIndexAsynchronously(): void {
@@ -202,7 +197,7 @@ export function onStartedStoringPoolItems(): void {
 }
 
 export function swapFavoriteButton(id: string): void {
-  getFavorite(id)?.swapPoolItemButton();
+  getPoolItem(id)?.swapPoolItemButton();
 }
 
 export function resetTagModifications(): void {

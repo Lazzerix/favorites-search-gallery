@@ -16,12 +16,10 @@ export async function loadAllPoolItemsFromDatabase(): Promise<PoolItem[]> {
 }
 
 export function fetchAllPoolItems(onPoolItemsFound: (poolItems: PoolItem[]) => void): Promise<void> {
-    console.log("fetchAllPoolItems Start");
   const onPoolItemsFoundHelper = (poolItems: PoolItem[]): void => {
     allPoolItems = allPoolItems.concat(poolItems);
     return onPoolItemsFound(poolItems);
   };
-    console.log("fetchAllPoolItems End");
   return PoolItemsFetcher.fetchAllPoolItems(onPoolItemsFoundHelper);
 }
 

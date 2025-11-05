@@ -5,8 +5,9 @@ import { FavoritesDatabaseRecord } from "../../../../types/favorite_types";
 import { convertToTagSet } from "../../../../utils/primitive/string";
 import { getFavoritesPageId } from "../../../../utils/misc/favorites_page_metadata";
 
-const SCHEMA_VERSION = 1;
-const SCHEMA_VERSION_LOCAL_STORAGE_KEY = "favoritesSearchGallerySchemaVersion";
+export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION_LOCAL_STORAGE_KEY = "favoritesSearchGallerySchemaVersion";
+
 const DATABASE = new Database<FavoritesDatabaseRecord>("Favorites", `user${getFavoritesPageId()}`);
 const METADATA_UPDATER = new BatchExecutor(100, 1000, updateFavorites);
 
@@ -21,6 +22,11 @@ function convertToFavorites(records: FavoritesDatabaseRecord[]): FavoriteItem[] 
 function getSchemaVersion(): number | null {
   const version = localStorage.getItem(SCHEMA_VERSION_LOCAL_STORAGE_KEY);
   return version === null ? null : parseInt(version);
+}
+
+function isSchemaVersionNull(): boolean {
+    const version = localStorage.getItem(SCHEMA_VERSION_LOCAL_STORAGE_KEY);
+    return version === null;
 }
 
 function setSchemaVersion(version: number): void {
@@ -44,7 +50,7 @@ function updateRecords(records: FavoritesDatabaseRecord[]): FavoritesDatabaseRec
 }
 
 async function updateRecordsIfNeeded(records: FavoritesDatabaseRecord[]): Promise<FavoritesDatabaseRecord[]> {
-  if (records.length === 0) {
+  if (records.length === 0 || isSchemaVersionNull()) {
     setSchemaVersion(SCHEMA_VERSION);
     return Promise.resolve(records);
   }

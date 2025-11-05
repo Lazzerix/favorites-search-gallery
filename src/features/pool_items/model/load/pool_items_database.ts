@@ -1,4 +1,4 @@
-import { PoolItem, getFavorite } from "../../types/pool_item/pool_item";
+import { PoolItem, getPoolItem } from "../../types/pool_item/pool_item";
 import { BatchExecutor } from "../../../../lib/components/batch_executor";
 import { Database } from "../../../../lib/components/database";
 import { PoolItemsDatabaseRecord } from "../../../../types/pool_item_types";
@@ -23,6 +23,11 @@ function getSchemaVersion(): number | null {
   return version === null ? null : parseInt(version);
 }
 
+function isSchemaVersionNull(): boolean {
+    const version = localStorage.getItem(SCHEMA_VERSION_LOCAL_STORAGE_KEY);
+    return version === null;
+}
+
 function setSchemaVersion(version: number): void {
   localStorage.setItem(SCHEMA_VERSION_LOCAL_STORAGE_KEY, version.toString());
 }
@@ -44,7 +49,7 @@ function updateRecords(records: PoolItemsDatabaseRecord[]): PoolItemsDatabaseRec
 }
 
 async function updateRecordsIfNeeded(records: PoolItemsDatabaseRecord[]): Promise<PoolItemsDatabaseRecord[]> {
-  if (records.length === 0) {
+  if (records.length === 0 || isSchemaVersionNull()) {
     setSchemaVersion(SCHEMA_VERSION);
     return Promise.resolve(records);
   }
@@ -71,7 +76,7 @@ export function storePoolItems(poolItems: PoolItem[]): Promise<void> {
 }
 
 export function updateMetadata(id: string): void {
-  const favorite = getFavorite(id);
+  const favorite = getPoolItem(id);
 
   if (favorite !== undefined) {
     METADATA_UPDATER.add(favorite);
