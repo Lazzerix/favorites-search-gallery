@@ -9,6 +9,7 @@ import { PoolItemsPaginationFlow } from "../flows/presentation/pool_items_pagina
 import { updateShowOnHoverOptionTriggeredFromGallery } from "../../ui/pool_items_menu_event_handlers";
 
 export function addPoolItemsEventsListeners(): void {
+  console.log("addPoolItemsEventsListeners start");
   Events.poolItems.poolItemsLoadedFromDatabase.on(PoolItemsAfterLoadFlow.onPoolItemsLoadedFromDatabase, {once: true});
   Events.poolItems.startedFetchingPoolItems.on(PoolItemsAfterLoadFlow.onStartedFetchingPoolItems, {once: true});
   Events.poolItems.startedStoringAllPoolItems.on(PoolItemsAfterLoadFlow.onStartedStoringAllPoolItems, {once: true});

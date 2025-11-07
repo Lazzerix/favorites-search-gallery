@@ -6,18 +6,20 @@ import { Events } from "../../../../../lib/global/events/events";
 import { PoolItem } from "../../../types/pool_item/pool_item";
 
 export async function loadAllPoolItems(): Promise<void> {
-    await loadAllPoolItemsFromDatabase();
+  console.log("loadAllPoolItems start");
+  await loadAllPoolItemsFromDatabase();
 
-    if (hasPoolItems()) {
-        Events.poolItems.poolItemsLoadedFromDatabase.emit();
-        showLoadedPoolItems();
-        await loadNewPoolItems();
-    } else {
-        await fetchAllPoolItems();
-        Events.poolItems.startedStoringAllPoolItems.emit();
-        await saveAllPoolItems();
-    }
-    Events.poolItems.poolItemsLoaded.emit();
+  if (hasPoolItems()) {
+    console.log("loadAllPoolItems start");
+    Events.poolItems.poolItemsLoadedFromDatabase.emit();
+    showLoadedPoolItems();
+    await loadNewPoolItems();
+  } else {
+    await fetchAllPoolItems();
+    Events.poolItems.startedStoringAllPoolItems.emit();
+    await saveAllPoolItems();
+  }
+  Events.poolItems.poolItemsLoaded.emit();
 }
 
 async function loadAllPoolItemsFromDatabase(): Promise<void> {
@@ -30,6 +32,7 @@ function hasPoolItems(): boolean {
 }
 
 async function fetchAllPoolItems(): Promise<void> {
+  console.log("fetchAllPoolItems start");
   PoolItemsPresentationFlow.clear();
   Events.poolItems.startedFetchingPoolItems.emit();
   await PoolItemsModel.fetchAllPoolItems(processFetchedPoolItems);

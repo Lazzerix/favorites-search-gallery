@@ -149,8 +149,7 @@ export async function fetchAllPoolItems(onPoolItemsFound: (poolItems: PoolItem[]
     PoolItemsFetchQueue.setDequeueCallback(onPoolItemsFound);
     console.log("PoolItemsFetcher.fetchAllPoolItems Mid");
 
-
-    while (someRequestsAreIncomplete() && PoolItemsModel.getAllPoolItems().length < Number(await API.getPoolItemsCount())) {
+    while (someRequestsAreIncomplete() && PoolItemsModel.getAllPoolItems().length < Number(await API.getPoolItemCount())) {
         console.log(`PoolItemsFetcher.fetchAllPoolItems Loop ${someRequestsAreIncomplete()} ${allRequestsHaveStarted()} ${noRequestsArePending()} ${PENDING_REQUEST_PAGE_NUMBERS.size}`);
         await fetchNextPoolItemsPage();
     }

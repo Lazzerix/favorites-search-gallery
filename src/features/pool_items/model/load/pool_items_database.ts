@@ -7,7 +7,7 @@ import { getPoolItemsPageId } from "../../../../utils/misc/pool_items_page_metad
 
 const SCHEMA_VERSION = 1;
 const SCHEMA_VERSION_LOCAL_STORAGE_KEY = "poolItemsSearchGallerySchemaVersion";
-const DATABASE = new Database<PoolItemsDatabaseRecord>("PoolItems", `user${getPoolItemsPageId()}`);
+const DATABASE = new Database<PoolItemsDatabaseRecord>("PoolItems", `pool${getPoolItemsPageId()}`);
 const METADATA_UPDATER = new BatchExecutor(100, 1000, updatePoolItems);
 
 function updatePoolItems(poolItems: PoolItem[]): void {
@@ -29,6 +29,7 @@ function isSchemaVersionNull(): boolean {
 }
 
 function setSchemaVersion(version: number): void {
+    console.log("setSchemaVersion");
   localStorage.setItem(SCHEMA_VERSION_LOCAL_STORAGE_KEY, version.toString());
 }
 
@@ -49,8 +50,14 @@ function updateRecords(records: PoolItemsDatabaseRecord[]): PoolItemsDatabaseRec
 }
 
 async function updateRecordsIfNeeded(records: PoolItemsDatabaseRecord[]): Promise<PoolItemsDatabaseRecord[]> {
-  if (records.length === 0 || isSchemaVersionNull()) {
+  console.log(`updateRecordsIfNeeded isSchemaVersionNull() ${isSchemaVersionNull()}`);
+  console.log(`localStorage.getItem(SCHEMA_VERSION_LOCAL_STORAGE_KEY); ${localStorage.getItem(SCHEMA_VERSION_LOCAL_STORAGE_KEY)}`);
+
+  if (isSchemaVersionNull()) {
     setSchemaVersion(SCHEMA_VERSION);
+  }
+
+  if (records.length === 0) {
     return Promise.resolve(records);
   }
 

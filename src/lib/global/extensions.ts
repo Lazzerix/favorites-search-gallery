@@ -8,10 +8,10 @@ import { EXTENSION_REGEX } from "../../utils/content/image_url";
 import { Favorite } from "../../types/favorite_types";
 import { GeneralSettings } from "../../config/general_settings";
 import { ON_FAVORITES_PAGE } from "./flags/intrinsic_flags";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { PromiseTimeoutError } from "../../types/error_types";
 import { getOriginalImageURLWithJPGExtension } from "../api/api_content";
 import { withTimeout } from "../../utils/misc/async";
-import {PoolItemRaw} from "../../types/pool_item_types";
 
 const DATABASE_NAME: string = "ImageExtensions";
 const OBJECT_STORE_NAME: string = "extensionMappings";

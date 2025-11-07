@@ -1,5 +1,5 @@
 import { isUserIsOnTheirOwnFavoritesPage } from "../../../utils/misc/favorites_page_metadata";
-import {isUserIsOnTheirOwnPoolPage} from "../../../utils/misc/pool_items_page_metadata";
+import { isUserIsOnTheirOwnPoolPage } from "../../../utils/misc/pool_items_page_metadata";
 
 export const ON_SEARCH_PAGE = location.href.includes("page=post&s=list");
 export const ON_FAVORITES_PAGE = location.href.includes("page=favorites");

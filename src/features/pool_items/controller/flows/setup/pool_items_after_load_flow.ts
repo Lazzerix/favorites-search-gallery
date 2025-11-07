@@ -3,18 +3,19 @@ import * as PoolItemsModel from "../../../model/pool_items_model";
 import { collectAspectRatios } from "../../../../../lib/global/content/skeleton/aspect_ratio_collector";
 
 export function onPoolItemsLoaded(): void {
-    PoolItemsMetadataUpdateFlow.updateMissingMetadata();
-    collectAspectRatios();
-    PoolItemsModel.buildSearchIndexAsynchronously();
+  PoolItemsMetadataUpdateFlow.updateMissingMetadata();
+  collectAspectRatios();
+  PoolItemsModel.buildSearchIndexAsynchronously();
 }
 
 export function onPoolItemsLoadedFromDatabase(): void {
-    PoolItemsModel.keepIndexedTagsSorted();
+  PoolItemsModel.keepIndexedTagsSorted();
 }
 
 export function onStartedFetchingPoolItems(): void {
-    PoolItemsModel.keepIndexedTagsSorted();
-    PoolItemsModel.buildSearchIndexSynchronously();
+  console.log("onStartedFetchingPoolItems start");
+  PoolItemsModel.keepIndexedTagsSorted();
+  PoolItemsModel.buildSearchIndexSynchronously();
 }
 
 export function onStartedStoringAllPoolItems(): void {

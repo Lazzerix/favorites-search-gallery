@@ -21,6 +21,7 @@ export async function loadAllPoolItemsFromDatabase(): Promise<PoolItem[]> {
 }
 
 export function fetchAllPoolItems(onSearchResultsFound: () => void): Promise<void> {
+  console.log("PoolItemsModel.fetchAllPoolItems start");
   const onPoolItemsFound = (poolItem: PoolItem[]): void => {
     latestSearchResults = latestSearchResults.concat(PoolItemsSearchFilter.filter(poolItem));
     return onSearchResultsFound();

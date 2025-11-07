@@ -1,8 +1,8 @@
 import { isGif, isVideo } from "../../utils/content/content_type";
 import { Favorite } from "../../types/favorite_types";
+import { PoolItemRaw } from "../../types/pool_item_types";
 import { getExtension } from "../../lib/global/extensions";
 import { getOriginalContentURL } from "../../lib/api/api_content";
-import {PoolItemRaw} from "../../types/pool_item_types";
 
 export class DownloadRequest {
   public id: string;

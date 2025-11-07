@@ -94,6 +94,7 @@ export class Database<V extends { id: string }> {
   }
 
   private deleteRecord(index: IDBIndex, id: string, objectStore: IDBObjectStore): Promise<void> {
+    console.log("deleteRecord");
     return new Promise((resolve) => {
       const request = index.getKey(id);
 

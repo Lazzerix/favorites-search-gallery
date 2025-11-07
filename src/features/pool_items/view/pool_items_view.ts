@@ -88,15 +88,16 @@ export function togglePaginationMenu(value: boolean): void {
 }
 
 export function setupPoolItemsView(): void {
-    createPoolItemHTMLTemplates();
-    collectAspectRatios();
-    PoolItemsStatus.setupPoolItemsStatus();
-    ContentTiler.setupTiler();
-    ContentTiler.showSkeleton();
-    hideUnusedLayoutSizer(Preferences.poolItemsLayout.value);
-    PoolItemsPaginationMenu.setupPoolItemsPaginationMenu();
-    toggleAddOrRemoveButtons(USER_IS_ON_THEIR_OWN_POOL_PAGE ? Preferences.removeButtonsVisible.value : Preferences.addButtonsVisible.value);
-    toggleDownloadButtons(Preferences.downloadButtonsVisible.value);
+  console.log("setupPoolItemsView start");
+  createPoolItemHTMLTemplates();
+  collectAspectRatios();
+  PoolItemsStatus.setupPoolItemsStatus();
+  ContentTiler.setupTiler();
+  ContentTiler.showSkeleton();
+  hideUnusedLayoutSizer(Preferences.poolItemsLayout.value);
+  PoolItemsPaginationMenu.setupPoolItemsPaginationMenu();
+  toggleAddOrRemoveButtons(USER_IS_ON_THEIR_OWN_POOL_PAGE ? Preferences.removeButtonsVisible.value : Preferences.addButtonsVisible.value);
+  toggleDownloadButtons(Preferences.downloadButtonsVisible.value);
 }
 
 export function preloadThumbnails(poolItems: PoolItem[]): void {

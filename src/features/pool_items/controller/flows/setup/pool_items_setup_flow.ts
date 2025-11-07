@@ -10,5 +10,6 @@ export function setupPoolItems(): void {
     PoolItemsView.setupPoolItemsView();
     addPoolItemsEventsListeners();
     PoolItemsLoadFlow.loadAllPoolItems();
+    console.log("setupPoolItems end\n");
   }
 }

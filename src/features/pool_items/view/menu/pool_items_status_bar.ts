@@ -2,7 +2,7 @@ import * as API from "../../../../lib/api/api";
 import { FAVORITES_SEARCH_GALLERY_CONTAINER } from "../../../../lib/global/container";
 import { ON_MOBILE_DEVICE } from "../../../../lib/global/flags/intrinsic_flags";
 import { Timeout } from "../../../../types/common_types";
-import { getPoolItemsPageId } from "../../../../utils/misc/pool_items_page_metadata";
+import { getPoolName } from "../../../../lib/api/api";
 
 let matchCountIndicator: HTMLElement;
 let statusIndicator: HTMLElement;
@@ -49,11 +49,24 @@ export function notifyNewPoolItemsFound(newPoolItemsCount: number): void {
 }
 
 async function setExpectedTotalPoolItemsCount(): Promise<void> {
-    expectedTotalPoolItemsCount = await API.getPoolItemsCount();
+  try {
+    expectedTotalPoolItemsCount = await API.getPoolItemCount();
+    console.log("expectedTotalPoolItemsCount", expectedTotalPoolItemsCount);
+  } catch (exception) {
+    console.error("setExpectedTotalPoolItemsCount ", exception);
+  }
 }
 
-export function setupPoolItemsStatus(): void {
+export async function setupPoolItemsStatus(): Promise<void> {
+  console.log("setupPoolItemsStatus");
   setExpectedTotalPoolItemsCount();
   matchCountIndicator = FAVORITES_SEARCH_GALLERY_CONTAINER.querySelector("#match-count-label") ?? document.createElement("label");
   statusIndicator = FAVORITES_SEARCH_GALLERY_CONTAINER.querySelector("#favorites-load-status-label") ?? document.createElement("label");
+  console.log("statusIndicator set ", statusIndicator);
+  // this needs to have an await and this function needs to be async to be able to get the name correctly
+  const poolName = await getPoolName();
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  document.getElementById("search-header").textContent = `Pool: ${poolName}`;
 }

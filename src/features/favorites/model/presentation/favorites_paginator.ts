@@ -90,6 +90,7 @@ export function changeResultsPerPage(newResultsPerPage: number): void {
 }
 
 export function gotoAdjacentPage(direction: NavigationKey): boolean {
+    console.log(`FavoritesPaginator.gotoAdjacentPage ${direction}`);
   const forward = isForwardNavigationKey(direction);
 
   if (onlyOnePage()) {
@@ -107,6 +108,8 @@ export function gotoAdjacentPage(direction: NavigationKey): boolean {
 }
 
 export function gotoRelativePage(relation: FavoritesPageRelation): boolean {
+    console.log(`FavoritesPaginator.gotoRelativePage ${relation}`);
+
   if (onlyOnePage()) {
     return false;
   }
